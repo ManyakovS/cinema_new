@@ -4,7 +4,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@nestjs/*": ["node_modules/@nestjs/*"]
     }
   },
   "include": ["src/**/*.ts"],

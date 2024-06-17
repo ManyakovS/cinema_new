@@ -4,9 +4,9 @@ import App from "@/App.vue";
 
 export const routes: RouteRecordRaw[] = [
   {
+    name: "home",
     path: "/",
     component: App,
-    redirect: { name: "home" },
   },
   {
     path: "/:catchAll(.*)",
