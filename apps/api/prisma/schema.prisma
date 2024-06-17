@@ -1,0 +1,266 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Verify {
+  id    Int     @id @default(autoincrement())
+  email String
+  phone String?
+  code  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Gender {
+  value String @id @unique
+  name  String
+
+  users User[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email    String  @unique
+  phone    String? @unique
+  name     String
+  password String
+
+  imageId Int?
+  image   Image? @relation(fields: [imageId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  gender       String?
+  genderEntity Gender? @relation(fields: [gender], references: [value], onDelete: Cascade, onUpdate: Cascade)
+
+  birthday DateTime?
+
+  films        UserFilm[]
+  Notification Notification[]
+}
+
+model UserFilmStatus {
+  value String @id @unique
+  name  String
+
+  userFilms UserFilm[]
+}
+
+model UserFilm {
+  film   Film @relation(fields: [filmId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  filmId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId Int
+
+  notification   Boolean        @default(true)
+  status         String
+  userFilmStatus UserFilmStatus @relation(fields: [status], references: [value], onDelete: Cascade, onUpdate: Cascade)
+  userTickets    UserTicket[]
+
+  @@id([filmId, userId])
+}
+
+model UserTicketStatus {
+  value String @id @unique
+  name  String
+
+  userTicket UserTicket[]
+}
+
+model UserTicket {
+  user   UserFilm @relation(fields: [filmId, userId], references: [filmId, userId], onDelete: Cascade, onUpdate: Cascade)
+  userId Int
+  filmId Int
+
+  status           String
+  userTicketStatus UserTicketStatus @relation(fields: [status], references: [value], onDelete: Cascade, onUpdate: Cascade)
+
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ticketId Int
+
+  @@id([userId, ticketId])
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  path String
+  name String
+
+  users  User[]
+  films  FilmImage[]
+  actors Actor[]
+}
+
+model Film {
+  id         Int    @id @unique @default(autoincrement())
+  shortTitle String @unique
+
+  dateStart DateTime
+
+  title       String
+  duration    Int
+  description String?
+
+  actors   FilmActor[]
+  genres   FilmGenre[]
+  images   FilmImage[]
+  users    UserFilm[]
+  sessions Session[]
+}
+
+model FilmActor {
+  film    Film  @relation(fields: [filmId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  filmId  Int
+  actor   Actor @relation(fields: [actorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  actorId Int
+
+  position String
+
+  @@id([filmId, actorId])
+}
+
+model FilmGenre {
+  film    Film  @relation(fields: [filmId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  filmId  Int
+  genre   Genre @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  genreId Int
+
+  @@id([filmId, genreId])
+}
+
+model FilmImage {
+  film    Film  @relation(fields: [filmId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  filmId  Int
+  imageId Int
+  image   Image @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([filmId, imageId])
+}
+
+model Actor {
+  id Int @id @default(autoincrement())
+
+  name    String
+  imageId Int?
+  image   Image? @relation(fields: [imageId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  films FilmActor[]
+}
+
+model Genre {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  films FilmGenre[]
+}
+
+model CinemaHall {
+  id Int @id @default(autoincrement())
+
+  name   String @unique
+  adress String @unique
+
+  timeOpen  DateTime
+  timeClose DateTime
+
+  contact String?
+
+  sessions Session[]
+  places   Place[]
+}
+
+model Place {
+  code String @id @unique
+
+  cinemaHallId Int
+  cinemaHall   CinemaHall @relation(fields: [cinemaHallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  ticket Ticket[]
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessionTimeStart DateTime
+  sessionTimeEnd   DateTime
+
+  status        String
+  sessionStatus SessionStatus @relation(fields: [status], references: [value], onDelete: Cascade, onUpdate: Cascade)
+
+  cinemaHallId Int
+  cinemaHall   CinemaHall @relation(fields: [cinemaHallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  filmId Int
+  film   Film @relation(fields: [filmId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  tickets Ticket[]
+}
+
+model SessionStatus {
+  value String @id @unique
+  name  String
+
+  sessions Session[]
+}
+
+model Ticket {
+  id Int @id @default(autoincrement())
+
+  cost         Float
+  status       String
+  ticketStatus TicketStatus @relation(fields: [status], references: [value], onDelete: Cascade, onUpdate: Cascade)
+
+  code  String
+  place Place  @relation(fields: [code], references: [code], onDelete: Cascade, onUpdate: Cascade)
+
+  sessionId Int
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  UserTicket UserTicket[]
+}
+
+model TicketStatus {
+  value String @id @unique
+  name  String
+
+  tickets Ticket[]
+}
+
+model NotificationType {
+  value String @id @unique
+  name  String
+
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  read      Boolean  @default(false)
+
+  userId Int // Связь с таблицей пользователей
+  user   User @relation(fields: [userId], references: [id])
+
+  type             String
+  notificationType NotificationType @relation(fields: [type], references: [value], onDelete: Cascade, onUpdate: Cascade)
+}
