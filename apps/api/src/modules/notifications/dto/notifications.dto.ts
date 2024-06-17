@@ -1,10 +1,8 @@
-import { TicketStatusEnum } from '@/modules/ticket/dto/ticket.dto'
-import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export enum NotificationType {
-  TICKET_BOOKED = 'ticket_book',
+  TICKET_BOOKED = "ticket_book",
 }
 
 export class CreateNotification {
@@ -14,15 +12,15 @@ export class CreateNotification {
   })
   @IsNotEmpty()
   @IsNumber()
-  userId: number
+  userId: number;
 
   @ApiProperty({
     type: String,
-    example: 'Билет куплен',
+    example: "Билет куплен",
   })
   @IsNotEmpty()
   @IsString()
-  content: string
+  content: string;
 
   @ApiProperty({
     type: String,
@@ -30,7 +28,7 @@ export class CreateNotification {
   })
   @IsNotEmpty()
   @IsString()
-  type: NotificationType
+  type: NotificationType;
 }
 
 export class ReadNotification {
@@ -40,7 +38,7 @@ export class ReadNotification {
   })
   @IsNotEmpty()
   @IsNumber()
-  notificationId: number
+  notificationId: number;
 }
 
 export class ReadAllNotification {
@@ -50,5 +48,5 @@ export class ReadAllNotification {
   })
   @IsNotEmpty()
   @IsNumber()
-  userId: number
+  userId: number;
 }

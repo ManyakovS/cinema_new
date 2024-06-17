@@ -1,29 +1,34 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException } from "@nestjs/common";
 
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
-import { filterBuilder } from '@/utils/filter/filter.builder'
-import { CinemaHall, Film, Place, Prisma, Ticket } from '@prisma/client'
-import { CreateSessionDto, CreateShortSessionDto, GetSessionsParamsDTO, SessionStatusEnum } from './dto/session.dto'
-import { TicketService } from '../ticket/ticket.service'
-import { CreateTicketDto } from '../ticket/dto/ticket.dto'
-import { CinemaHallService } from '../cinema-hall/cinema-hall.service'
-import { applyFilters, IDefaultFilters } from '@/utils/filter'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
+import { filterBuilder } from "@/utils/filter/filter.builder";
+import { CinemaHall, Film, Place, Prisma, Ticket } from "@prisma/client";
+import {
+  CreateSessionDto,
+  CreateShortSessionDto,
+  GetSessionsParamsDTO,
+  SessionStatusEnum,
+} from "./dto/session.dto";
+import { TicketService } from "../ticket/ticket.service";
+import { CreateTicketDto } from "../ticket/dto/ticket.dto";
+import { CinemaHallService } from "../cinema-hall/cinema-hall.service";
+import { applyFilters, IDefaultFilters } from "@/utils/filter";
 
-import { omit } from 'lodash'
+import { omit } from "lodash";
 
 type SelectSessionType = {
-  id: number
-  createdAt: Date
-  updatedAt: Date
-  sessionTimeStart: Date
-  sessionTimeEnd: Date
-  status: string
-  cinemaHallId?: number
-  filmId?: number
-  film: Film
-  cinemaHall: CinemaHall & { places: Place[] }
-  tickets: Ticket[]
-}
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  sessionTimeStart: Date;
+  sessionTimeEnd: Date;
+  status: string;
+  cinemaHallId?: number;
+  filmId?: number;
+  film: Film;
+  cinemaHall: CinemaHall & { places: Place[] };
+  tickets: Ticket[];
+};
 
 @Injectable()
 export class SessionService {
@@ -34,8 +39,8 @@ export class SessionService {
   ) {}
 
   async findAll(params: GetSessionsParamsDTO) {
-    const films = await this.findByFilter(params)
-    return films
+    const films = await this.findByFilter(params);
+    return films;
   }
 
   async findById(id: number) {
@@ -47,26 +52,26 @@ export class SessionService {
         ...this.sessionResourceIncludeBuilder(),
         tickets: {
           orderBy: {
-            code: 'asc',
+            code: "asc",
           },
         },
       },
-    })
+    });
   }
 
   async createShort(createDto: CreateShortSessionDto) {
     const film = await this.prismaService.film.findFirst({
       where: {
         id: createDto.filmId,
-      }
-    })
+      },
+    });
 
     const session = await this.prismaService.session.create({
       select: {
         ...this.sessionResourceIncludeBuilder(),
         tickets: {
           orderBy: {
-            code: 'asc',
+            code: "asc",
           },
         },
       },
@@ -75,15 +80,19 @@ export class SessionService {
         createdAt: new Date(),
         updatedAt: new Date(),
         sessionTimeStart: new Date(createDto.sessionTimeStart),
-        sessionTimeEnd: new Date(new Date(createDto.sessionTimeStart).setMinutes(new Date(createDto.sessionTimeStart).getMinutes() + film.duration)),
+        sessionTimeEnd: new Date(
+          new Date(createDto.sessionTimeStart).setMinutes(
+            new Date(createDto.sessionTimeStart).getMinutes() + film.duration,
+          ),
+        ),
         status: SessionStatusEnum.AVAILABLE,
-      }
-    })
+      },
+    });
 
     /* TODO: Удалить. Наверное */
-    await this.generateSessionTickets(session.id)
+    await this.generateSessionTickets(session.id);
 
-    return session as SelectSessionType
+    return session as SelectSessionType;
   }
 
   async create(createDto: CreateSessionDto) {
@@ -92,7 +101,7 @@ export class SessionService {
         ...this.sessionResourceIncludeBuilder(),
         tickets: {
           orderBy: {
-            code: 'asc',
+            code: "asc",
           },
         },
       },
@@ -103,21 +112,21 @@ export class SessionService {
         sessionTimeStart: new Date(createDto.sessionTimeStart),
         sessionTimeEnd: new Date(createDto.sessionTimeEnd),
       },
-    })
+    });
 
     /* TODO: Удалить. Наверное */
-    await this.generateSessionTickets(session.id)
+    await this.generateSessionTickets(session.id);
 
-    return session as SelectSessionType
+    return session as SelectSessionType;
   }
 
   /* Утилиты не в запросе */
 
   async generateSessionTickets(sessionId: number) {
-    const session = await this.findById(sessionId)
+    const session = await this.findById(sessionId);
 
     if (session) {
-      const tickets = []
+      const tickets = [];
 
       session.cinemaHall?.places?.forEach((place) => {
         tickets.push(
@@ -125,23 +134,24 @@ export class SessionService {
             await this.ticketServise.create({
               sessionId: session.id,
               cost: 300,
-              status: 'available',
+              status: "available",
               code: place.code,
-            })
+            });
           })(),
-        )
-      })
+        );
+      });
 
-      return tickets
-    } else throw new NotFoundException(`Session with id ${sessionId} not found`)
+      return tickets;
+    } else
+      throw new NotFoundException(`Session with id ${sessionId} not found`);
   }
 
   async findByFilter(params: GetSessionsParamsDTO) {
-    const defaultFilters = {}
+    const defaultFilters = {};
 
     if (params.sessionTimeStart)
-      defaultFilters['sessionTimeStart'] = async () => {
-        const _filter = new Date(params.sessionTimeStart)
+      defaultFilters["sessionTimeStart"] = async () => {
+        const _filter = new Date(params.sessionTimeStart);
         return {
           where: {
             sessionTimeStart: {
@@ -149,21 +159,21 @@ export class SessionService {
               lte: new Date(_filter.setHours(23, 59, 59, 999)),
             },
           },
-        }
-      }
+        };
+      };
 
     const { whereBuilder } = await filterBuilder<Prisma.SessionWhereInput>(
       omit(params, Object.keys(defaultFilters)),
       defaultFilters,
-    )
+    );
 
     return this.prismaService.session.findMany({
       where: whereBuilder,
       select: this.sessionShortResouceIncludeBuilder(),
       orderBy: {
-        sessionTimeStart: 'asc',
+        sessionTimeStart: "asc",
       },
-    })
+    });
   }
 
   sessionResourceIncludeBuilder() {
@@ -179,7 +189,7 @@ export class SessionService {
           places: true,
         },
       },
-    }
+    };
   }
 
   sessionShortResouceIncludeBuilder() {
@@ -188,6 +198,6 @@ export class SessionService {
       sessionTimeStart: true,
       status: true,
       cinemaHallId: true,
-    }
+    };
   }
 }

@@ -1,7 +1,7 @@
-import { CreateShortSessionDto } from '@/modules/session/dto/session.dto'
-import { TicketStatusEnum } from '@/modules/ticket/dto/ticket.dto'
-import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { CreateShortSessionDto } from "../../session/dto/session.dto";
+import { TicketStatusEnum } from "../../ticket/dto/ticket.dto";
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -9,66 +9,66 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator'
+} from "class-validator";
 
 export class FilmResource {
-  id: number
-  shortTitle: string
-  dateStart: Date
-  title: string
-  duration: number
+  id: number;
+  shortTitle: string;
+  dateStart: Date;
+  title: string;
+  duration: number;
   images: {
-    id: number
-    createdAt: Date
-    updatedAt: Date
-    path: string
-    name: string
-  }[]
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    path: string;
+    name: string;
+  }[];
 }
 
 export class CreateFilmDto {
   @ApiProperty({
     type: String,
-    example: 'spider-man2',
+    example: "spider-man2",
   })
   @IsNotEmpty()
   @IsString()
-  shortTitle: string
+  shortTitle: string;
 
   @ApiProperty({
     type: String,
-    example: 'Человек-паук 2',
+    example: "Человек-паук 2",
   })
   @IsNotEmpty()
   @IsString()
-  title: string
+  title: string;
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
   })
   @IsNotEmpty()
   @IsDateString()
   @Type(() => IsDateString)
-  dateStart: string
+  dateStart: string;
 
   @ApiProperty({
     type: Number,
-    example: '120',
+    example: "120",
   })
   @IsNotEmpty()
   @IsNumber()
-  duration: number
+  duration: number;
 
   @ApiProperty({
     type: String,
     example:
-      'Они живут в разных мирах. Коля Герасимов — в сегодняшней Москве, Алиса Селезнева — на сто лет позже. Коля – обычный парень, ему нет дела до будущего. Алису не отпускает прошлое: она должна найти маму, которую потеряла, когда была совсем ребенком. Встреча Алисы и Коли станет началом невероятных приключений, в которых нашим героям предстоит отвоевать у космических пиратов Вселенную, восстановить ход времени и обрести самое дорогое: любовь и дружбу.',
+      "Они живут в разных мирах. Коля Герасимов — в сегодняшней Москве, Алиса Селезнева — на сто лет позже. Коля – обычный парень, ему нет дела до будущего. Алису не отпускает прошлое: она должна найти маму, которую потеряла, когда была совсем ребенком. Встреча Алисы и Коли станет началом невероятных приключений, в которых нашим героям предстоит отвоевать у космических пиратов Вселенную, восстановить ход времени и обрести самое дорогое: любовь и дружбу.",
     required: false,
   })
   @IsOptional()
   @IsString()
-  description?: string
+  description?: string;
 }
 
 export class GetFilmsParamsDTO {
@@ -79,44 +79,44 @@ export class GetFilmsParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  id?: number
+  id?: number;
 
   @ApiProperty({
     type: String,
-    example: 'Человек-паук',
+    example: "Человек-паук",
     required: false,
   })
   @IsOptional()
   @IsString()
-  title?: string
+  title?: string;
 
   @ApiProperty({
     type: String,
     example:
-      'Они живут в разных мирах. Коля Герасимов — в сегодняшней Москве, Алиса Селезнева — на сто лет позже. Коля – обычный парень, ему нет дела до будущего. Алису не отпускает прошлое: она должна найти маму, которую потеряла, когда была совсем ребенком. Встреча Алисы и Коли станет началом невероятных приключений, в которых нашим героям предстоит отвоевать у космических пиратов Вселенную, восстановить ход времени и обрести самое дорогое: любовь и дружбу.',
+      "Они живут в разных мирах. Коля Герасимов — в сегодняшней Москве, Алиса Селезнева — на сто лет позже. Коля – обычный парень, ему нет дела до будущего. Алису не отпускает прошлое: она должна найти маму, которую потеряла, когда была совсем ребенком. Встреча Алисы и Коли станет началом невероятных приключений, в которых нашим героям предстоит отвоевать у космических пиратов Вселенную, восстановить ход времени и обрести самое дорогое: любовь и дружбу.",
     required: false,
   })
   @IsOptional()
   @IsString()
-  description?: string
+  description?: string;
 
   @ApiProperty({
     type: String,
-    example: 'spider-man2',
+    example: "spider-man2",
     required: false,
   })
   @IsOptional()
   @IsString()
-  shortTitle?: string
+  shortTitle?: string;
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
     required: false,
   })
   @IsOptional()
   @IsDateString()
-  dateStart?: string
+  dateStart?: string;
 }
 
 export class CreateFilmImageDto {
@@ -126,7 +126,7 @@ export class CreateFilmImageDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  filmId: number
+  filmId: number;
 
   @ApiProperty({
     type: Number,
@@ -134,7 +134,7 @@ export class CreateFilmImageDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  imageId: number
+  imageId: number;
 }
 
 export class CreateFilmGenresDto {
@@ -144,7 +144,7 @@ export class CreateFilmGenresDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  filmId: number
+  filmId: number;
 
   @ApiProperty({
     type: Array,
@@ -152,7 +152,7 @@ export class CreateFilmGenresDto {
   })
   @IsNotEmpty()
   @IsArray()
-  genresIds: number[]
+  genresIds: number[];
 }
 
 export class CreateFilmActorsDto {
@@ -162,23 +162,23 @@ export class CreateFilmActorsDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  filmId: number
+  filmId: number;
 
   @ApiProperty({
     type: Array,
     example: [
       {
         actorId: 1,
-        position: 'Режиссер',
+        position: "Режиссер",
       },
     ],
   })
   @IsNotEmpty()
   @IsArray()
   actors: {
-    actorId: number
-    position: string
-  }[]
+    actorId: number;
+    position: string;
+  }[];
 }
 
 export class GetFilmsByUserParamsDTO {
@@ -189,7 +189,7 @@ export class GetFilmsByUserParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  userId: number
+  userId: number;
 
   @ApiProperty({
     type: TicketStatusEnum,
@@ -198,7 +198,7 @@ export class GetFilmsByUserParamsDTO {
   })
   @IsOptional()
   @IsString()
-  ticketStatus?: TicketStatusEnum
+  ticketStatus?: TicketStatusEnum;
 }
 
 export class FullCreateFilm extends CreateFilmDto {
@@ -209,14 +209,14 @@ export class FullCreateFilm extends CreateFilmDto {
   })
   @IsOptional()
   @IsArray()
-  genresIds: number[]
+  genresIds: number[];
 
   @ApiProperty({
     type: Array,
     example: [
       {
         actorId: 1,
-        position: 'Режиссер',
+        position: "Режиссер",
       },
     ],
     required: false,
@@ -224,9 +224,9 @@ export class FullCreateFilm extends CreateFilmDto {
   @IsOptional()
   @IsArray()
   actors: {
-    actorId: number
-    position: string
-  }[]
+    actorId: number;
+    position: string;
+  }[];
 
   @ApiProperty({
     type: Number,
@@ -235,19 +235,23 @@ export class FullCreateFilm extends CreateFilmDto {
   })
   @IsOptional()
   @IsNumber()
-  imageId?: number
+  imageId?: number;
 
   @ApiProperty({
-    type: Array<Pick<CreateShortSessionDto,  'cinemaHallId' | 'sessionTimeStart'>>,
-    example: [{
-      cinemaHallId: 1,
-      sessionTimeStart: '2024-06-01T15:00'
-    }],
+    type: Array<
+      Pick<CreateShortSessionDto, "cinemaHallId" | "sessionTimeStart">
+    >,
+    example: [
+      {
+        cinemaHallId: 1,
+        sessionTimeStart: "2024-06-01T15:00",
+      },
+    ],
     required: false,
   })
   @IsOptional()
   @IsArray()
-  sessions: Pick<CreateShortSessionDto,  'cinemaHallId' | 'sessionTimeStart'>[]
+  sessions: Pick<CreateShortSessionDto, "cinemaHallId" | "sessionTimeStart">[];
 }
 
 export class FullEditFilm extends FullCreateFilm {
@@ -257,5 +261,5 @@ export class FullEditFilm extends FullCreateFilm {
   })
   @IsNotEmpty()
   @IsNumber()
-  id: number
+  id: number;
 }

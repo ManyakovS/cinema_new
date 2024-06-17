@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { SessionStatus } from '@prisma/client'
-import { Type } from 'class-transformer'
+import { ApiProperty } from "@nestjs/swagger";
+import { SessionStatus } from "@prisma/client";
+import { Type } from "class-transformer";
 
 import {
   IsDateString,
@@ -8,52 +8,52 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator'
+} from "class-validator";
 
 export class CreateSessionDto {
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
   })
   @IsNotEmpty()
   @IsDateString()
   @Type(() => IsDateString)
-  createdAt: string
+  createdAt: string;
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
   })
   @IsNotEmpty()
   @IsDateString()
   @Type(() => IsDateString)
-  updatedAt: string
+  updatedAt: string;
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
   })
   @IsNotEmpty()
   @IsDateString()
   @Type(() => IsDateString)
-  sessionTimeStart: string
+  sessionTimeStart: string;
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
   })
   @IsNotEmpty()
   @IsDateString()
   @Type(() => IsDateString)
-  sessionTimeEnd: string
+  sessionTimeEnd: string;
 
   @ApiProperty({
     type: String,
-    example: 'available',
+    example: "available",
   })
   @IsNotEmpty()
   @IsString()
-  status: string
+  status: string;
 
   @ApiProperty({
     type: Number,
@@ -61,7 +61,7 @@ export class CreateSessionDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  cinemaHallId: number
+  cinemaHallId: number;
 
   @ApiProperty({
     type: Number,
@@ -69,10 +69,13 @@ export class CreateSessionDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  filmId: number
+  filmId: number;
 }
 
-export type CreateShortSessionDto = Pick<CreateSessionDto, 'filmId' | 'cinemaHallId' | 'sessionTimeStart'>
+export type CreateShortSessionDto = Pick<
+  CreateSessionDto,
+  "filmId" | "cinemaHallId" | "sessionTimeStart"
+>;
 
 export class GetSessionsParamsDTO {
   @ApiProperty({
@@ -82,7 +85,7 @@ export class GetSessionsParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  id?: number
+  id?: number;
 
   @ApiProperty({
     type: Number,
@@ -91,7 +94,7 @@ export class GetSessionsParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  filmId?: number
+  filmId?: number;
 
   @ApiProperty({
     type: String,
@@ -100,20 +103,20 @@ export class GetSessionsParamsDTO {
   })
   @IsOptional()
   @IsString()
-  status?: SessionStatus['value']
+  status?: SessionStatus["value"];
 
   @ApiProperty({
     type: String,
-    example: '2023-01-01',
+    example: "2023-01-01",
     required: false,
   })
   @IsOptional()
   @IsDateString()
   @Type(() => IsDateString)
-  sessionTimeStart?: string
+  sessionTimeStart?: string;
 }
 
 export enum SessionStatusEnum {
-  AVAILABLE = 'available',
-  COMPLETED = 'completed',
+  AVAILABLE = "available",
+  COMPLETED = "completed",
 }

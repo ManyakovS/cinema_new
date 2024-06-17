@@ -1,14 +1,14 @@
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   CreateActorDto,
   CreateActorImageDto,
   GetActorsParamsDTO,
-} from './dto/actor.dto'
-import { filterBuilder } from '@/utils/filter/filter.builder'
-import { Prisma } from '@prisma/client'
-import { removeNesting } from '@/utils/nesting/remove-nesting'
-import { ImageService } from '../image/image.service'
+} from "./dto/actor.dto";
+import { filterBuilder } from "@/utils/filter/filter.builder";
+import { Prisma } from "@prisma/client";
+import { removeNesting } from "@/utils/nesting/remove-nesting";
+import { ImageService } from "../image/image.service";
 
 @Injectable()
 export class ActorService {
@@ -18,8 +18,8 @@ export class ActorService {
   ) {}
 
   async findAll(params: GetActorsParamsDTO) {
-    const actors = await this.findByFilter(params)
-    return actors
+    const actors = await this.findByFilter(params);
+    return actors;
   }
 
   async findById(id: number) {
@@ -28,29 +28,29 @@ export class ActorService {
         id,
       },
       select: this.actorSelectBuilder(),
-    })
+    });
   }
 
   async create(createDto: CreateActorDto) {
-    const image = await this.imageService.imageById(createDto.imageId)
-    if (!image) throw new NotFoundException(`Image not found`)
+    const image = await this.imageService.imageById(createDto.imageId);
+    if (!image) throw new NotFoundException(`Image not found`);
 
     const actor = await this.prismaService.actor.create({
       data: {
         ...createDto,
       },
-    })
+    });
 
-    return actor
+    return actor;
   }
 
   async addActorImage(actorImageDto: CreateActorImageDto) {
-    const actor = await this.findById(actorImageDto.actorId)
-    const image = await this.imageService.imageById(actorImageDto.imageId)
+    const actor = await this.findById(actorImageDto.actorId);
+    const image = await this.imageService.imageById(actorImageDto.imageId);
 
-    if (!actor) throw new NotFoundException(`Film not found`)
+    if (!actor) throw new NotFoundException(`Film not found`);
 
-    if (!image) throw new NotFoundException(`Image not found`)
+    if (!image) throw new NotFoundException(`Image not found`);
 
     return await this.prismaService.actor.update({
       where: {
@@ -59,20 +59,21 @@ export class ActorService {
       data: {
         ...actorImageDto,
       },
-    })
+    });
   }
 
   /* Утилиты не в запросе */
 
   async findByFilter(params: GetActorsParamsDTO) {
-    const { whereBuilder } = await filterBuilder<Prisma.ActorWhereInput>(params)
+    const { whereBuilder } =
+      await filterBuilder<Prisma.ActorWhereInput>(params);
 
     const actors = await this.prismaService.actor.findMany({
       where: whereBuilder,
       select: this.actorSelectBuilder(),
-    })
+    });
 
-    return removeNesting(actors)
+    return removeNesting(actors);
   }
 
   actorSelectBuilder() {
@@ -80,6 +81,6 @@ export class ActorService {
       id: true,
       name: true,
       image: true,
-    }
+    };
   }
 }

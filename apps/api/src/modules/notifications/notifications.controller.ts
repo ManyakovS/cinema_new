@@ -9,20 +9,20 @@ import {
   Get,
   Query,
   Put,
-} from '@nestjs/common'
-import { NotificationsService } from './notifications.service'
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { JwtAuthGuard } from '@/shared/guards/jwt-auth.guard'
+} from "@nestjs/common";
+import { NotificationsService } from "./notifications.service";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { JwtAuthGuard } from "@/shared/guards/jwt-auth.guard";
 import {
   CreateNotification,
   ReadAllNotification,
   ReadNotification,
-} from './dto/notifications.dto'
+} from "./dto/notifications.dto";
 
-import { Response } from 'express'
+import { Response } from "express";
 
-@ApiTags('notifications')
-@Controller('notifications')
+@ApiTags("notifications")
+@Controller("notifications")
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
@@ -34,74 +34,74 @@ export class NotificationsController {
   } */
 
   // Создание
-  @ApiBearerAuth('AccessToken')
+  @ApiBearerAuth("AccessToken")
   @ApiBody({
     type: () => CreateNotification,
   })
   @ApiResponse({
     status: 200,
-    description: 'Notification created in successfully',
+    description: "Notification created in successfully",
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('create')
+  @Post("create")
   async create(@Body() body: CreateNotification, @Res() response: Response) {
-    const notification = await this.notificationsService.create(body)
+    const notification = await this.notificationsService.create(body);
 
-    return response.json(notification)
+    return response.json(notification);
   }
 
   // Получить по id
-  @ApiBearerAuth('AccessToken')
-  @ApiResponse({ status: 200, description: 'Return ticket by id' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth("AccessToken")
+  @ApiResponse({ status: 200, description: "Return ticket by id" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
   @UseGuards(JwtAuthGuard)
-  @Get('id')
-  async getTicketById(@Query('userId') id: number, @Res() response: Response) {
-    return response.json(await this.notificationsService.findAllByUser(id))
+  @Get("id")
+  async getTicketById(@Query("userId") id: number, @Res() response: Response) {
+    return response.json(await this.notificationsService.findAllByUser(id));
   }
 
   // Прочитать
-  @ApiBearerAuth('AccessToken')
+  @ApiBearerAuth("AccessToken")
   @ApiBody({
     type: () => ReadNotification,
   })
   @ApiResponse({
     status: 200,
-    description: 'Notification read in successfully',
+    description: "Notification read in successfully",
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Put('read')
+  @Put("read")
   async read(@Body() body: ReadNotification, @Res() response: Response) {
     const notification = await this.notificationsService.read(
       body.notificationId,
-    )
+    );
 
-    return response.json(notification)
+    return response.json(notification);
   }
 
   // Прочитать все
-  @ApiBearerAuth('AccessToken')
+  @ApiBearerAuth("AccessToken")
   @ApiBody({
     type: () => ReadAllNotification,
   })
   @ApiResponse({
     status: 200,
-    description: 'Notifications read in successfully',
+    description: "Notifications read in successfully",
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Put('readAll')
+  @Put("readAll")
   async readAll(@Body() body: ReadAllNotification, @Res() response: Response) {
-    const notifications = await this.notificationsService.readAll(body.userId)
+    const notifications = await this.notificationsService.readAll(body.userId);
 
-    return response.json(notifications)
+    return response.json(notifications);
   }
 }

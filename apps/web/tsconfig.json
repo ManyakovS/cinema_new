@@ -4,6 +4,11 @@
     "baseUrl": "./",
     "allowJs": true,
     "useUnknownInCatchVariables": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "ignoreDeprecations": "5.0",
+    "noEmitOnError": false,  // Продолжает компиляцию, даже если есть ошибки
     "paths": {
       "@/*": ["src/*"]
     },

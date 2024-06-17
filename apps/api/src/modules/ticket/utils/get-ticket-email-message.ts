@@ -1,20 +1,20 @@
-import { Genre } from '@prisma/client'
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { Genre } from "@prisma/client";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 
 interface getTicketBuyEmailMessageParams {
-  ticketId: number
-  title: string
-  genres: Genre[]
-  cinemaTitle: string
-  rating: string
-  year: number
-  sessionTimeStart: Date
-  userFullName: string
-  cinemaHall: string
-  adress: string
-  placeCode: string
-  cost: number
+  ticketId: number;
+  title: string;
+  genres: Genre[];
+  cinemaTitle: string;
+  rating: string;
+  year: number;
+  sessionTimeStart: Date;
+  userFullName: string;
+  cinemaHall: string;
+  adress: string;
+  placeCode: string;
+  cost: number;
 }
 
 export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
@@ -47,7 +47,7 @@ export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
                   >${body.rating}</span
                 >${body.year}, Россия, ${body.genres
                   .map((g) => g.name)
-                  .join(', ')}
+                  .join(", ")}
               </div>
             </div>
             <table
@@ -62,7 +62,7 @@ export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
                 <tr>
                   <td style="width: 25%">
                     <span style="font-size: 5.5em; line-height: 1; padding-right: 0.3ch"
-                      >${format(body.sessionTimeStart, 'HH:mm', {
+                      >${format(body.sessionTimeStart, "HH:mm", {
                         locale: ru,
                       })}</span
                     >
@@ -75,7 +75,7 @@ export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
                         <tr>
                           <td style="padding-top: 10px; width: 30%">
                             <span style="font-size: 2em; line-height: 1.1em"
-                              >${format(body.sessionTimeStart, 'd MMMM', {
+                              >${format(body.sessionTimeStart, "d MMMM", {
                                 locale: ru,
                               })}</span
                             >
@@ -94,7 +94,7 @@ export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
                         <tr>
                           <td><span style="font-size: 1.5em">${format(
                             new Date(body.sessionTimeStart),
-                            'EEEE',
+                            "EEEE",
                             { locale: ru },
                           )}</span></td>
                         </tr>
@@ -231,5 +231,5 @@ export function getTicketBuyEmailMessage(body: getTicketBuyEmailMessageParams) {
     </div> 
   </div>
 </article>  
-`
+`;
 }

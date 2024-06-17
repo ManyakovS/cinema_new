@@ -1,30 +1,30 @@
-import { InjectQueue } from '@nestjs/bull'
-import { Injectable } from '@nestjs/common'
-import { Queue } from 'bull'
-import { NotificationsGateway } from './notifications.geteway'
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
+import { InjectQueue } from "@nestjs/bull";
+import { Injectable } from "@nestjs/common";
+import { Queue } from "bull";
+import { NotificationsGateway } from "./notifications.geteway";
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
 
-import { CreateNotification } from './dto/notifications.dto'
+import { CreateNotification } from "./dto/notifications.dto";
 
-import { Notification, Prisma } from '@prisma/client'
-import { filterBuilder } from '@/utils/filter/filter.builder'
+import { Notification, Prisma } from "@prisma/client";
+import { filterBuilder } from "@/utils/filter/filter.builder";
 
 @Injectable()
 export class NotificationsService {
   constructor(
     private prismaService: PrismaService,
     private readonly notificationsGateway: NotificationsGateway,
-    @InjectQueue('notifications') private readonly notificationsQueue: Queue,
+    @InjectQueue("notifications") private readonly notificationsQueue: Queue,
   ) {}
 
   async create(body: CreateNotification) {
     const notification = await this.prismaService.notification.create({
       data: body,
-    })
+    });
 
-    await this.send(notification)
+    await this.send(notification);
 
-    return notification
+    return notification;
   }
 
   async read(notificationId: number) {
@@ -35,9 +35,9 @@ export class NotificationsService {
       data: {
         read: true,
       },
-    })
+    });
 
-    return notification
+    return notification;
   }
 
   async readAll(userId: number) {
@@ -50,33 +50,33 @@ export class NotificationsService {
           read: true,
         },
       },
-    )
+    );
 
-    return await this.findAllByUser(userId)
+    return await this.findAllByUser(userId);
   }
 
   async findAllByUser(userId: number) {
-    const notifications = this.findByFilter({ userId })
+    const notifications = this.findByFilter({ userId });
 
-    return notifications
+    return notifications;
   }
 
   async send(notification: Notification) {
     // Добавляем уведомление в очередь
-    await this.notificationsQueue.add('user-notification', { ...notification })
+    await this.notificationsQueue.add("user-notification", { ...notification });
   }
 
   async findByFilter(params: Prisma.NotificationWhereInput) {
     const { whereBuilder } =
-      await filterBuilder<Prisma.NotificationWhereInput>(params)
+      await filterBuilder<Prisma.NotificationWhereInput>(params);
 
     const notifications = this.prismaService.notification.findMany({
       where: whereBuilder,
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
-    })
+    });
 
-    return notifications
+    return notifications;
   }
 }

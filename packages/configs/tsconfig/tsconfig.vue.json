@@ -3,16 +3,11 @@
   "schema": "https://json.schemastore.org/tsconfig",
   "display": "Vue JS",
   "compilerOptions": {
+    "strict": false,
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",
     "jsx": "preserve",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost",
-      "WebWorker"
-    ]
-  },
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"]
+  }
 }

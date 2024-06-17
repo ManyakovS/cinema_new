@@ -7,6 +7,20 @@ import AutoImport from "unplugin-auto-import/vite";
 import Component from "unplugin-vue-components/vite";
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ["@nestjs/microservices", "class-transformer"],
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        "@nestjs/microservices",
+        "class-transformer",
+        "@mdi/font/css/materialdesignicons.css",
+        "socket.io-client",
+        "vue3-dropzone",
+      ],
+    },
+  },
   resolve: {
     alias: {
       "@/": `${path.resolve(__dirname, "src")}/`,
@@ -20,8 +34,8 @@ export default defineConfig({
     }),
 
     Component({
-      resolvers: [],
       extensions: ["vue"],
+      dirs: ["src/pages", "src/components"],
       deep: true,
       dts: "src/@types/components.d.ts",
     }),
@@ -31,7 +45,7 @@ export default defineConfig({
     VitePWA({
       mode: "development",
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "safari-pinned-tab.svg", "robot.txt"],
+      includeAssets: ["favicon.ico", "safari-pinned-tab.svg", "robot.txt"],
       filename: "claims-sw.ts",
       base: "/",
       srcDir: "src",

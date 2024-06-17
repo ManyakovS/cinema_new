@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
-import { SessionService } from './session.service'
+import { Module } from "@nestjs/common";
+import { SessionService } from "./session.service";
 
-import { SessionController } from './session.controller'
-import { CinemaHallModule } from '../cinema-hall/cinema-hall.module'
-import { TicketModule } from '../ticket/ticket.module'
+import { SessionController } from "./session.controller";
+import { CinemaHallModule } from "../cinema-hall/cinema-hall.module";
+import { TicketModule } from "../ticket/ticket.module";
 
 @Module({
   providers: [SessionService],

@@ -1,13 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateActorDto {
   @ApiProperty({
     type: String,
-    example: 'Раян Гослинг',
+    example: "Раян Гослинг",
   })
   @IsNotEmpty()
-  name: string
+  name: string;
 
   @ApiProperty({
     type: Number,
@@ -17,19 +17,19 @@ export class CreateActorDto {
   @IsOptional()
   @IsNotEmpty()
   @IsNumber()
-  imageId: number
+  imageId: number;
 }
 
 export class GetActorsParamsDTO {
   @ApiProperty({
     type: String,
-    example: 'Раян Гослинг',
+    example: "Раян Гослинг",
     required: false,
   })
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  name: string
+  name: string;
 }
 
 export class CreateActorImageDto {
@@ -39,7 +39,7 @@ export class CreateActorImageDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  actorId: number
+  actorId: number;
 
   @ApiProperty({
     type: Number,
@@ -47,5 +47,5 @@ export class CreateActorImageDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  imageId: number
+  imageId: number;
 }

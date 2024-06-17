@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common'
+import { Controller } from "@nestjs/common";
 
-@Controller('task-ticket')
+@Controller("task-ticket")
 export class TaskTicketController {}

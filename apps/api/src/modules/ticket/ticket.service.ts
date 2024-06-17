@@ -2,42 +2,42 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common'
+} from "@nestjs/common";
 
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
-import { Prisma, Ticket, TicketStatus } from '@prisma/client'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
+import { Prisma, Ticket, TicketStatus } from "@prisma/client";
 
 // filter
-import { filterBuilder } from '@/utils/filter/filter.builder'
+import { filterBuilder } from "@/utils/filter/filter.builder";
 import {
   BookTicketsDTO,
   CreateTicketDto,
   GetTicketsParamsDTO,
   TicketStatusEnum,
-} from './dto/ticket.dto'
-import { removeNesting } from '@/utils/nesting/remove-nesting'
+} from "./dto/ticket.dto";
+import { removeNesting } from "@/utils/nesting/remove-nesting";
 
 // Tasks
-import { SchedulerRegistry } from '@nestjs/schedule'
+import { SchedulerRegistry } from "@nestjs/schedule";
 
 // Bull
-import { InjectQueue } from '@nestjs/bull'
-import { Queue } from 'bull'
+import { InjectQueue } from "@nestjs/bull";
+import { Queue } from "bull";
 
 // Notifications
-import { NotificationsService } from '../notifications/notifications.service'
+import { NotificationsService } from "../notifications/notifications.service";
 import {
   CreateNotification,
   NotificationType,
-} from '../notifications/dto/notifications.dto'
-import { EmailService } from '../email/email.service'
-import { getTicketBuyEmailMessage } from './utils/get-ticket-email-message'
-import { UserService } from '../user/user.service'
+} from "../notifications/dto/notifications.dto";
+import { EmailService } from "../email/email.service";
+import { getTicketBuyEmailMessage } from "./utils/get-ticket-email-message";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class TicketService {
   constructor(
-    @InjectQueue('tickets') private readonly ticketsQueue: Queue,
+    @InjectQueue("tickets") private readonly ticketsQueue: Queue,
     private prismaService: PrismaService,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly notificationsService: NotificationsService,
@@ -46,12 +46,12 @@ export class TicketService {
   ) {}
 
   async findAll(params: GetTicketsParamsDTO) {
-    const tickets = await this.findByFilter(params)
-    return removeNesting(tickets) as typeof tickets
+    const tickets = await this.findByFilter(params);
+    return removeNesting(tickets) as typeof tickets;
   }
 
   async findAllByUser(userId: number, filmId: number) {
-    if (!userId || !filmId) throw new NotFoundException()
+    if (!userId || !filmId) throw new NotFoundException();
 
     const tickets = await this.prismaService.ticket.findMany({
       where: {
@@ -63,13 +63,13 @@ export class TicketService {
         },
       },
       select: this.ticketResourceIncludeBuilder(),
-    })
-    return removeNesting(tickets) as typeof tickets
+    });
+    return removeNesting(tickets) as typeof tickets;
   }
 
   async findByIds(ids: number[]) {
-    const tickets = await this.findManyById(ids)
-    return tickets
+    const tickets = await this.findManyById(ids);
+    return tickets;
   }
 
   async findById(id: number) {
@@ -78,9 +78,9 @@ export class TicketService {
       where: {
         id,
       },
-    })
+    });
 
-    return removeNesting(ticket) as typeof ticket
+    return removeNesting(ticket) as typeof ticket;
   }
 
   async create(createDto: CreateTicketDto) {
@@ -89,19 +89,19 @@ export class TicketService {
       data: {
         ...createDto,
       },
-    })
+    });
 
-    return removeNesting(ticket) as typeof ticket
+    return removeNesting(ticket) as typeof ticket;
   }
 
   async cancelBookedTicket(tickets: BookTicketsDTO) {
-    const _tickets = await this.findManyById(tickets.ticketsIds)
+    const _tickets = await this.findManyById(tickets.ticketsIds);
 
     if (_tickets.length !== tickets.ticketsIds.length)
-      throw new NotFoundException()
+      throw new NotFoundException();
 
     if (_tickets.some((t) => t.status !== TicketStatusEnum.RESERVATED))
-      throw new BadRequestException('Билеты не в том статусе')
+      throw new BadRequestException("Билеты не в том статусе");
 
     try {
       await Promise.all(
@@ -114,8 +114,8 @@ export class TicketService {
                   ticketId: ticket.id,
                 },
               },
-            })
-          })
+            });
+          });
 
           return await this.prismaService.$transaction(async (prisma) => {
             const userFilm = await prisma.userFilm.findFirst({
@@ -129,7 +129,7 @@ export class TicketService {
               include: {
                 userTickets: true,
               },
-            })
+            });
 
             if (userFilm?.userTickets && !userFilm.userTickets.length) {
               await prisma.userFilm.delete({
@@ -139,31 +139,31 @@ export class TicketService {
                     userId: tickets.userId,
                   },
                 },
-              })
+              });
             }
 
             return await this.changeTicketStatus(
               ticket.id,
               TicketStatusEnum.AVAILABLE,
-            )
-          })
+            );
+          });
         }),
-      )
+      );
 
-      return _tickets
+      return _tickets;
     } catch (error) {
-      return error
+      return error;
     }
   }
 
   async bookedTicket(tickets: BookTicketsDTO) {
-    let _tickets = await this.findManyById(tickets.ticketsIds)
+    let _tickets = await this.findManyById(tickets.ticketsIds);
 
     if (_tickets.length !== tickets.ticketsIds.length)
-      throw new NotFoundException()
+      throw new NotFoundException();
 
     if (_tickets.some((t) => t.status !== TicketStatusEnum.AVAILABLE))
-      throw new BadRequestException('Билеты не в том статусе')
+      throw new BadRequestException("Билеты не в том статусе");
 
     return await this.prismaService.$transaction(async (prisma) => {
       try {
@@ -175,7 +175,7 @@ export class TicketService {
                 filmId: ticket.session.film.id,
                 userId: tickets.userId,
               },
-            })
+            });
             if (!userFilm)
               await prisma.userFilm.create({
                 data: {
@@ -184,7 +184,7 @@ export class TicketService {
                   notification: false,
                   status: TicketStatusEnum.RESERVATED,
                 },
-              })
+              });
             /* :TODO */
 
             ticket = await prisma.ticket.update({
@@ -203,13 +203,13 @@ export class TicketService {
                 },
               },
               select: this.ticketResourceIncludeBuilder(),
-            })
+            });
 
-            return ticket
+            return ticket;
           }),
-        )
+        );
       } catch (error) {
-        return error
+        return error;
       }
 
       try {
@@ -217,29 +217,29 @@ export class TicketService {
           _tickets.map(async (ticket) => {
             // Добавляем задание в очередь с отложенным временем выполнения (10 минут)
             await this.ticketsQueue.add(
-              'check-payment',
+              "check-payment",
               { ticketId: ticket.id, userId: tickets.userId },
               { delay: 600000 }, // 10 minutes in milliseconds
-            )
+            );
           }),
-        )
+        );
       } catch (error) {
-        return error
+        return error;
       }
 
-      return _tickets
-    })
+      return _tickets;
+    });
   }
 
   async buyTicket(tickets: BookTicketsDTO) {
     return await this.prismaService.$transaction(async (prisma) => {
-      const _tickets = await this.findManyById(tickets.ticketsIds)
+      const _tickets = await this.findManyById(tickets.ticketsIds);
 
       if (_tickets.length !== tickets.ticketsIds.length)
-        throw new NotFoundException()
+        throw new NotFoundException();
 
       if (_tickets.some((t) => t.status !== TicketStatusEnum.RESERVATED))
-        throw new BadRequestException('Билеты не в том статусе')
+        throw new BadRequestException("Билеты не в том статусе");
 
       /* TODO: Здесь должна была быть оплата */
       if (true) {
@@ -258,7 +258,7 @@ export class TicketService {
             data: {
               status: TicketStatusEnum.BOOKED,
             },
-          })
+          });
 
           return await prisma.ticket.update({
             where: {
@@ -281,20 +281,20 @@ export class TicketService {
                 },
               },
             },
-          })
+          });
         } catch (error) {
-          return error
+          return error;
         }
-      })
+      });
 
-      await this.deleteCheckPaymentJobs(tickets)
+      await this.deleteCheckPaymentJobs(tickets);
 
-      await this.sendBuyTicketNotification(tickets.userId, _tickets)
+      await this.sendBuyTicketNotification(tickets.userId, _tickets);
 
-      await this.sendBuyTicketEmailNotification(tickets.userId, _tickets)
+      await this.sendBuyTicketEmailNotification(tickets.userId, _tickets);
 
-      return _tickets
-    })
+      return _tickets;
+    });
   }
 
   async sendBuyTicketNotification(
@@ -312,31 +312,31 @@ export class TicketService {
         <br/>
         Вы можете найти файл с билетом в разделе "Билеты" в вашем аккаунте на нашем сайте, или на электронной почте.
         `,
-      })
-    })
+      });
+    });
   }
 
   async sendBuyTicketEmailNotification(
     userId: number,
     tickets: Prisma.TicketWhereInput[] | any,
   ) {
-    const user = await this.userService.findOneById(userId)
+    const user = await this.userService.findOneById(userId);
 
     tickets.forEach((ticket) => {
       const message = getTicketBuyEmailMessage({
         ticketId: ticket.id,
         title: ticket.session.film.title,
         genres: ticket.session.film.genres,
-        cinemaTitle: 'Кинотеатр',
-        rating: '12+',
+        cinemaTitle: "Кинотеатр",
+        rating: "12+",
         year: new Date().getFullYear(),
         sessionTimeStart: ticket.session.sessionTimeStart,
         userFullName: user.name,
-        cinemaHall: 'Зал 1',
-        adress: 'г. Кемерово, пр. Ленина, 91',
+        cinemaHall: "Зал 1",
+        adress: "г. Кемерово, пр. Ленина, 91",
         placeCode: ticket.code,
         cost: ticket.cost,
-      })
+      });
 
       this.emailService.addEmailWithQRCodeQueue({
         to: user.email,
@@ -344,35 +344,35 @@ export class TicketService {
         body: message,
         /* TODO: */
         qrContent: `http://localhost:3000/ticket/${ticket.id}`,
-      })
-    })
+      });
+    });
   }
 
   async sendNotification(body: CreateNotification) {
     this.notificationsService.create({
       ...body,
-    })
+    });
   }
 
   async deleteCheckPaymentJobs(tickets: BookTicketsDTO) {
     try {
       const jobs = await this.ticketsQueue.getJobs([
-        'waiting',
-        'active',
-        'delayed',
-      ])
+        "waiting",
+        "active",
+        "delayed",
+      ]);
       jobs.forEach(async (job) => {
-        if (job.name === 'check-payment') {
-          const { ticketId, userId } = job.data
+        if (job.name === "check-payment") {
+          const { ticketId, userId } = job.data;
           if (
             tickets.ticketsIds.includes(ticketId) &&
             tickets.userId === userId
           )
-            await job.remove()
+            await job.remove();
         }
-      })
+      });
     } catch (error) {
-      return error
+      return error;
     }
   }
 
@@ -385,11 +385,11 @@ export class TicketService {
         },
       },
       select: this.ticketResourceIncludeBuilder(),
-    })
-    return removeNesting(tickets) as typeof tickets
+    });
+    return removeNesting(tickets) as typeof tickets;
   }
 
-  async changeTicketStatus(ticketId: number, status: TicketStatus['value']) {
+  async changeTicketStatus(ticketId: number, status: TicketStatus["value"]) {
     const ticket = this.prismaService.ticket.update({
       where: {
         id: ticketId,
@@ -398,39 +398,39 @@ export class TicketService {
         status,
       },
       select: this.ticketResourceIncludeBuilder(),
-    })
-    return ticket
+    });
+    return ticket;
   }
 
   async dropAllReservated() {
     const tickets = await this.findByFilter({
       status: TicketStatusEnum.RESERVATED,
-    })
+    });
 
     tickets.forEach((ticket) => {
       if (!ticket.UserTicket.length)
-        this.changeTicketStatus(ticket.id, TicketStatusEnum.AVAILABLE)
+        this.changeTicketStatus(ticket.id, TicketStatusEnum.AVAILABLE);
       else
         this.cancelBookedTicket({
           userId: ticket.UserTicket[0].userId,
           ticketsIds: [ticket.id],
-        })
+        });
       /* console.log(ticket.id)
       console.log(ticket.UserTicket.length)
       console.log(ticket.UserTicket[0]) */
-    })
+    });
   }
 
   async findByFilter(params: GetTicketsParamsDTO) {
     const { whereBuilder } =
-      await filterBuilder<Prisma.TicketWhereInput>(params)
+      await filterBuilder<Prisma.TicketWhereInput>(params);
 
     const tickets = this.prismaService.ticket.findMany({
       where: whereBuilder,
       select: this.ticketShortResouceIncludeBuilder(),
-    })
+    });
 
-    return tickets
+    return tickets;
   }
 
   ticketResourceIncludeBuilder() {
@@ -457,7 +457,7 @@ export class TicketService {
           user: true,
         },
       },
-    }
+    };
   }
 
   ticketShortResouceIncludeBuilder() {
@@ -473,6 +473,6 @@ export class TicketService {
           user: true,
         },
       },
-    }
+    };
   }
 }

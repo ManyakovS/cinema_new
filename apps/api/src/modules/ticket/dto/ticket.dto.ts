@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
-import { Place, SessionStatus } from '@prisma/client'
+import { Place, SessionStatus } from "@prisma/client";
 
 import {
   IsArray,
@@ -9,40 +9,40 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator'
+} from "class-validator";
 
 export enum TicketStatusEnum {
-  AVAILABLE = 'available',
-  SELECTED = 'selected',
-  RESERVATED = 'reservated',
-  BOOKED = 'booked',
-  CANCELED = 'canceled',
+  AVAILABLE = "available",
+  SELECTED = "selected",
+  RESERVATED = "reservated",
+  BOOKED = "booked",
+  CANCELED = "canceled",
 }
 
 export class CreateTicketDto {
   @ApiProperty({
     type: Number,
-    example: '300',
+    example: "300",
   })
   @IsNotEmpty()
   @IsNumber()
-  cost: number
+  cost: number;
 
   @ApiProperty({
     type: String,
-    example: 'available',
+    example: "available",
   })
   @IsNotEmpty()
   @IsString()
-  status: SessionStatus['value']
+  status: SessionStatus["value"];
 
   @ApiProperty({
     type: String,
-    example: 'B3',
+    example: "B3",
   })
   @IsNotEmpty()
   @IsString()
-  code: Place['code']
+  code: Place["code"];
 
   @ApiProperty({
     type: Number,
@@ -50,7 +50,7 @@ export class CreateTicketDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  sessionId: number
+  sessionId: number;
 }
 
 export class GetTicketsParamsDTO {
@@ -61,7 +61,7 @@ export class GetTicketsParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  id?: number
+  id?: number;
 
   @ApiProperty({
     type: Number,
@@ -70,7 +70,7 @@ export class GetTicketsParamsDTO {
   })
   @IsOptional()
   @IsNumber()
-  cost?: number
+  cost?: number;
 
   @ApiProperty({
     type: String,
@@ -79,7 +79,7 @@ export class GetTicketsParamsDTO {
   })
   @IsOptional()
   @IsString()
-  status?: TicketStatusEnum
+  status?: TicketStatusEnum;
 }
 
 export class BookTicketsDTO {
@@ -88,7 +88,7 @@ export class BookTicketsDTO {
     example: 1,
   })
   @IsNumber()
-  userId: number
+  userId: number;
 
   @ApiProperty({
     type: Number,
@@ -96,5 +96,5 @@ export class BookTicketsDTO {
     required: false,
   })
   @IsArray()
-  ticketsIds: number[]
+  ticketsIds: number[];
 }

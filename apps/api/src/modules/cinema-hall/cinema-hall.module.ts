@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common'
-import { CinemaHallService } from './cinema-hall.service'
-import { CinemaHallController } from './cinema-hall.controller'
+import { Module } from "@nestjs/common";
+import { CinemaHallService } from "./cinema-hall.service";
+import { CinemaHallController } from "./cinema-hall.controller";
 
 @Module({
   providers: [CinemaHallService],

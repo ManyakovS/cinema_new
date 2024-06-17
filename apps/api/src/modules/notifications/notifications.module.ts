@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common'
-import { BullModule } from '@nestjs/bull'
+import { Module } from "@nestjs/common";
+import { BullModule } from "@nestjs/bull";
 
-import { NotificationsController } from './notifications.controller'
+import { NotificationsController } from "./notifications.controller";
 
-import { NotificationsService } from './notifications.service'
-import { NotificationsGateway } from './notifications.geteway'
-import { NotificationsProcessor } from './notification.proccessor'
-import { AuthModule } from '../auth/auth.module'
+import { NotificationsService } from "./notifications.service";
+import { NotificationsGateway } from "./notifications.geteway";
+import { NotificationsProcessor } from "./notification.proccessor";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
   providers: [
@@ -18,12 +18,12 @@ import { AuthModule } from '../auth/auth.module'
   imports: [
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: "localhost",
         port: 6379,
       },
     }),
     BullModule.registerQueue({
-      name: 'notifications',
+      name: "notifications",
     }),
     AuthModule,
   ],

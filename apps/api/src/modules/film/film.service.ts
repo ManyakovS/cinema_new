@@ -2,9 +2,9 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
-} from '@nestjs/common'
+} from "@nestjs/common";
 
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
 import {
   CreateFilmActorsDto,
   CreateFilmDto,
@@ -13,74 +13,77 @@ import {
   FullCreateFilm,
   GetFilmsByUserParamsDTO,
   GetFilmsParamsDTO,
-} from './dto/film.dto'
+} from "./dto/film.dto";
 
-import { Prisma } from '@prisma/client'
+import { Prisma } from "@prisma/client";
 
 // Services
-import { ImageService } from '../image/image.service'
-import { SessionService } from '../session/session.service'
+import { ImageService } from "../image/image.service";
+import { SessionService } from "../session/session.service";
 
 // Filtes
-import { filterBuilder } from '@/utils/filter/filter.builder'
-import { removeNesting } from '@/utils/nesting/remove-nesting'
+import { filterBuilder } from "@/utils/filter/filter.builder";
+import { removeNesting } from "@/utils/nesting/remove-nesting";
 
-import { omit } from 'lodash'
-import { IDefaultFilters } from '@/utils/filter'
+import { omit } from "lodash";
+import { IDefaultFilters } from "@/utils/filter";
 
 @Injectable()
 export class FilmService {
   constructor(
     private prismaService: PrismaService,
     private imageService: ImageService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
   ) {}
 
   /* Создание фильма. С сеансами, изображениями */
   async fullCreate(body: FullCreateFilm) {
     try {
       const film = await this.prismaService.$transaction(async (prisma) => {
-        let _film = await this.create(body)
+        let _film = await this.create(body);
 
         if (body.genresIds?.length)
           await this.putFilmGenres({
             filmId: _film.id,
             genresIds: body.genresIds,
-          })
+          });
 
         if (body.actors?.length)
           await this.putFilmActors({
             filmId: _film.id,
             actors: body.actors,
-          })
+          });
 
         if (body.imageId)
           await this.addFilmImage({
             filmId: _film.id,
             imageId: body.imageId,
-          })
+          });
 
         if (body.sessions.length) {
           await Promise.all(
             body.sessions.map(async (session) => {
-              await this.sessionService.createShort({...session, filmId: _film.id })
-            })
-          )
+              await this.sessionService.createShort({
+                ...session,
+                filmId: _film.id,
+              });
+            }),
+          );
         }
 
-        return await this.findById(_film.id)
-      })
+        return await this.findById(_film.id);
+      });
 
-      return film
+      return film;
     } catch (error) {
-      console.log(error)
-      throw new NotAcceptableException(error)
+      console.log(error);
+      throw new NotAcceptableException(error);
     }
   }
 
   async findAll(params: GetFilmsParamsDTO) {
-    const films = await this.findByFilter(params)
-    return films
+    const films = await this.findByFilter(params);
+    return films;
   }
 
   async findByUser(params: GetFilmsByUserParamsDTO) {
@@ -90,7 +93,7 @@ export class FilmService {
           userId: params.userId,
           status: params.ticketStatus,
         },
-      })
+      });
       const films = await this.prismaService.film.findMany({
         where: {
           id: {
@@ -98,10 +101,10 @@ export class FilmService {
           },
         },
         include: this.filmUserResouceIncludeBuilder(params.userId),
-      })
-      return removeNesting(films)
+      });
+      return removeNesting(films);
     } catch (error) {
-      return error
+      return error;
     }
   }
 
@@ -111,9 +114,9 @@ export class FilmService {
         id: Number(filmId),
       },
       include: this.filmResourceIncludeBuilder(),
-    })
+    });
 
-    return removeNesting(film)
+    return removeNesting(film);
   }
 
   async findByShortTitle(shortTitle: string) {
@@ -122,9 +125,9 @@ export class FilmService {
         shortTitle,
       },
       include: this.filmResourceIncludeBuilder(),
-    })
+    });
 
-    return removeNesting(film)
+    return removeNesting(film);
   }
 
   async create(createDto: CreateFilmDto, prisma?: any) {
@@ -136,18 +139,18 @@ export class FilmService {
         title: createDto.title,
         duration: createDto.duration,
       },
-    })
+    });
 
-    return removeNesting(film)
+    return removeNesting(film);
   }
 
   async addFilmImage(filmImageDto: CreateFilmImageDto) {
-    let film = await this.findById(filmImageDto.filmId)
-    const image = await this.imageService.imageById(filmImageDto.imageId)
+    let film = await this.findById(filmImageDto.filmId);
+    const image = await this.imageService.imageById(filmImageDto.imageId);
 
-    if (!film) throw new NotFoundException(`Film not found`)
+    if (!film) throw new NotFoundException(`Film not found`);
 
-    if (!image) throw new NotFoundException(`Image not found`)
+    if (!image) throw new NotFoundException(`Image not found`);
 
     film = await this.prismaService.filmImage.create({
       select: {
@@ -157,9 +160,9 @@ export class FilmService {
       data: {
         ...filmImageDto,
       },
-    })
+    });
 
-    return removeNesting(film)
+    return removeNesting(film);
   }
 
   async putFilmGenres(filmGenresDto: CreateFilmGenresDto) {
@@ -171,17 +174,17 @@ export class FilmService {
           where: { id: filmGenresDto.filmId },
           select: { genres: true },
         })
-      ).genres
+      ).genres;
 
       // Получаем ID жанров, которые нужно удалить
       const genresToDelete = currentGenres
         .filter((genre) => !filmGenresDto.genresIds.includes(genre.genreId))
-        .map((genre) => genre.genreId)
+        .map((genre) => genre.genreId);
 
       // Получаем ID жанров, которые нужно создать
       const genresToCreate = filmGenresDto.genresIds.filter(
-        (genreId) => !currentGenres.map((g) => g.genreId).includes(genreId)
-      )
+        (genreId) => !currentGenres.map((g) => g.genreId).includes(genreId),
+      );
 
       // Удаляем устаревшие связи
       if (genresToDelete.length > 0) {
@@ -190,7 +193,7 @@ export class FilmService {
             filmId: filmGenresDto.filmId,
             genreId: { in: genresToDelete },
           },
-        })
+        });
       }
 
       // Обновляем фильм новыми жанрами
@@ -200,8 +203,8 @@ export class FilmService {
             filmId: filmGenresDto.filmId,
             genreId,
           })),
-        })
-    })
+        });
+    });
   }
 
   /* Добавить актеров */
@@ -215,20 +218,20 @@ export class FilmService {
           where: { id: filmActorsDto.filmId },
           select: { actors: true },
         })
-      ).actors
+      ).actors;
 
       // Получаем ID жанров, которые нужно удалить
       const actorsToDelete = currentActors
         .filter(
           (actor) =>
-            !filmActorsDto.actors.map((a) => a.actorId).includes(actor.actorId)
+            !filmActorsDto.actors.map((a) => a.actorId).includes(actor.actorId),
         )
-        .map((actor) => actor.actorId)
+        .map((actor) => actor.actorId);
 
       // Получаем ID жанров, которые нужно создать
       const actorsToCreate = filmActorsDto.actors.filter(
-        (actor) => !currentActors.map((a) => a.actorId).includes(actor.actorId)
-      )
+        (actor) => !currentActors.map((a) => a.actorId).includes(actor.actorId),
+      );
 
       // Удаляем устаревшие связи
       if (actorsToDelete.length > 0) {
@@ -237,7 +240,7 @@ export class FilmService {
             filmId: filmActorsDto.filmId,
             actorId: { in: actorsToDelete },
           },
-        })
+        });
       }
 
       // Обновляем фильм новыми жанрами
@@ -248,27 +251,27 @@ export class FilmService {
             filmId: filmActorsDto.filmId,
             actorId: actor.actorId,
           })),
-        })
-    })
+        });
+    });
   }
 
   /* Утилиты не в запросе */
 
   async findByFilter(
     params: Prisma.FilmWhereInput,
-    defaultFilters: IDefaultFilters<Prisma.FilmWhereInput> = {}
+    defaultFilters: IDefaultFilters<Prisma.FilmWhereInput> = {},
   ) {
     const { whereBuilder } = await filterBuilder<Prisma.FilmWhereInput>(
       omit(params, Object.keys(defaultFilters)),
-      defaultFilters
-    )
+      defaultFilters,
+    );
 
     const films = await this.prismaService.film.findMany({
       where: whereBuilder,
       include: this.filmShortResouceIncludeBuilder(),
-    })
+    });
 
-    return removeNesting(films)
+    return removeNesting(films);
   }
 
   filmUserResouceIncludeBuilder(userId: number) {
@@ -284,7 +287,7 @@ export class FilmService {
           userTickets: true,
         },
       },
-    }
+    };
   }
 
   filmShortResouceIncludeBuilder() {
@@ -299,7 +302,7 @@ export class FilmService {
           genre: true,
         },
       },
-    }
+    };
   }
 
   filmResourceIncludeBuilder() {
@@ -333,6 +336,6 @@ export class FilmService {
           tickets: true,
         },
       },
-    }
+    };
   }
 }
