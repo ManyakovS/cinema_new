@@ -1,32 +1,16 @@
 import type { RouteRecordRaw } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
-import { authGuard } from "./route-guards/auth.guard";
-import { isAuthicatedGuard } from "./route-guards/is-authenticated.guard";
-
-import Login from "@/pages/Login.vue";
-import Home from "@/pages/Home.vue";
+import App from "@/App.vue";
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: "/login",
-    component: Login,
-    beforeEnter: isAuthicatedGuard,
-  },
-  {
-    path: "/register",
-    component: () =>
-      import(/* webpackChunkName: "RegisterPage" */ "@/pages/Register.vue"),
-    beforeEnter: isAuthicatedGuard,
-  },
-  {
     path: "/",
-    component: Home,
-    beforeEnter: authGuard,
+    component: App,
+    redirect: { name: "home" },
   },
   {
     path: "/:catchAll(.*)",
-    component: () =>
-      import(/* webpackChunkName: "NotFoundPage" */ "@/pages/404.vue"),
+    component: () => import("@/pages/NotFound.vue"),
   },
 ];
 

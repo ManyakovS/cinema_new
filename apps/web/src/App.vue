@@ -1,5 +1,4 @@
 <template>
-  <ReloadPWA />
   <main>
     <router-view />
   </main>
