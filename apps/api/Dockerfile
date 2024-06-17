@@ -1,12 +1,9 @@
 FROM node:18-alpine
 
-# Установка необходимых зависимостей
-RUN apk add --no-cache libc6-compat
-
 # Установка рабочей директории
 WORKDIR /app
 
-# Копирование package.json и yarn.lock
+# Копирование package.json
 COPY package*.json ./
 
 # Установка зависимостей

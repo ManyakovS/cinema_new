@@ -4,7 +4,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Копирование package.json и yarn.lock
-COPY package*.json ./
+COPY package.json ./
 
 # Установка зависимостей
 RUN yarn install
@@ -12,14 +12,8 @@ RUN yarn install
 # Копирование исходного кода приложения
 COPY . .
 
-# Установка rimraf и других необходимых глобальных зависимостей
-RUN yarn global add rimraf
-
 # Сборка приложения
-RUN yarn build
+RUN yarn run build
 
-# Установка web-сервера для статических файлов
-RUN yarn global add serve
-
-# Команда для запуска приложения
-CMD ["serve", "-s", "dist"]
+# Команда для запуска приложения в режиме предпросмотра
+CMD ["yarn", "serve"]

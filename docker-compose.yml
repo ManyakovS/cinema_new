@@ -1,25 +1,21 @@
-version: "3.8"
-
+version: '3.8'
 services:
   api:
     build:
-      context: ./apps/api
-    environment:
-      DATABASE_URL: "file:./dev.db"
-    volumes:
-      - ./apps/api/prisma/dev.db:/app/prisma/dev.db
+      context: .
+      dockerfile: apps/api/Dockerfile
+    # Укажите дополнительные настройки, такие как порты, переменные окружения и т.д.
     ports:
-      - 3000:3000
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
 
   web:
     build:
-      context: ./apps/web
+      context: .
+      dockerfile: apps/web/Dockerfile
+    # Укажите дополнительные настройки, такие как порты, переменные окружения и т.д.
     ports:
-      - 8080:80
-
-  redocly:
-    image: redocly/redoc
+      - "3000:3000"
     environment:
-      SPEC_URL: http://api:3000/docs-json
-    ports:
-      - 5050:80
+      - NODE_ENV=production
