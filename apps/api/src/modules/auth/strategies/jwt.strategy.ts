@@ -1,9 +1,9 @@
-import { ExtractJwt, Strategy } from 'passport-jwt'
+import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { PassportStrategy } from '@nestjs/passport'
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
 
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,8 +12,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey:
-        'b1e0d59a8976edbce70c413d50eacb06f54ac318ca123f753b6a1c972c132a51',
-    })
+        "b1e0d59a8976edbce70c413d50eacb06f54ac318ca123f753b6a1c972c132a51",
+    });
   }
 
   async validate(payload: any) {
@@ -21,12 +21,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: {
         id: payload.sub,
       },
-    })
+    });
 
-    if (!user) throw new UnauthorizedException('Invalid Token')
+    if (!user) throw new UnauthorizedException("Invalid Token");
 
-    delete user.password
+    delete user.password;
 
-    return user
+    return user;
   }
 }

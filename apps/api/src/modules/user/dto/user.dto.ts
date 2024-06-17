@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsNumber } from 'class-validator'
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber } from "class-validator";
 
 export class ChangeUserImage {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class ChangeUserImage {
   })
   @IsNotEmpty()
   @IsNumber()
-  userId: number
+  userId: number;
 
   @ApiProperty({
     type: Number,
@@ -16,5 +16,5 @@ export class ChangeUserImage {
   })
   @IsNotEmpty()
   @IsNumber()
-  imageId: number
+  imageId: number;
 }

@@ -7,50 +7,50 @@ import {
   Put,
   Res,
   UseGuards,
-} from '@nestjs/common'
+} from "@nestjs/common";
 
-import { JwtAuthGuard } from '@/shared/guards/jwt-auth.guard'
+import { JwtAuthGuard } from "@/shared/guards/jwt-auth.guard";
 
-import { UserService } from './user.service'
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ChangeUserImage } from './dto/user.dto'
+import { UserService } from "./user.service";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ChangeUserImage } from "./dto/user.dto";
 
-import { Response } from 'express'
+import { Response } from "express";
 
-@ApiTags('user')
-@Controller('users')
+@ApiTags("user")
+@Controller("users")
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @ApiBearerAuth('AccessToken')
-  @ApiResponse({ status: 200, description: 'Return array of users' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth("AccessToken")
+  @ApiResponse({ status: 200, description: "Return array of users" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
   @UseGuards(JwtAuthGuard)
   @Get()
   async get() {
-    return await this.userService.find()
+    return await this.userService.find();
   }
 
   // Добавить изображение
-  @ApiBearerAuth('AccessToken')
+  @ApiBearerAuth("AccessToken")
   @ApiBody({
     type: () => ChangeUserImage,
   })
   @ApiResponse({
     status: 200,
-    description: 'Image add to actor in successfully',
+    description: "Image add to actor in successfully",
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Put('change-image')
+  @Put("change-image")
   async changeUserImage(
     @Body() body: ChangeUserImage,
     @Res() response: Response,
   ) {
-    const user = await this.userService.changeUserImage(body)
+    const user = await this.userService.changeUserImage(body);
 
-    return response.json(user)
+    return response.json(user);
   }
 }

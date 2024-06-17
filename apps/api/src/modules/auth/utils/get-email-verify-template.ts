@@ -1,6 +1,6 @@
 export const getEmailVerifyTemplate = (body: {
-  code: string
-  link: string
+  code: string;
+  link: string;
 }) => {
   return `
     <article style="max-width: 645px">
@@ -153,5 +153,5 @@ export const getEmailVerifyTemplate = (body: {
       </div>
     </div>
   </article>
-    `
-}
+    `;
+};

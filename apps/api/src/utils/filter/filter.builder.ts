@@ -1,10 +1,10 @@
-import { applyFilters, IApplyFiltersOutput, IDefaultFilters } from '../filter'
+import { applyFilters, IApplyFiltersOutput, IDefaultFilters } from "../filter";
 
 export async function filterBuilder<T>(
   params: T,
   defaultFilters?: IDefaultFilters<T>,
 ): Promise<IApplyFiltersOutput<T>> {
-  const availableFilters = {}
+  const availableFilters = {};
 
   Object.keys(params).forEach((key) => {
     availableFilters[key] = async ({ filter }) => {
@@ -14,13 +14,13 @@ export async function filterBuilder<T>(
             equals: filter,
           },
         },
-      }
-    }
-  })
+      };
+    };
+  });
 
   return await applyFilters<T>({
     appliedFiltersInput: params,
     availableFilters,
     defaultFilters,
-  })
+  });
 }

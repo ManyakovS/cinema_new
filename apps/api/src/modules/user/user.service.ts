@@ -1,11 +1,11 @@
-import * as argon2 from 'argon2'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import * as argon2 from "argon2";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
 
-import { RegisterUserDto } from '../auth/dto/auth.dto'
-import { ChangeUserImage } from './dto/user.dto'
-import { ImageService } from '../image/image.service'
+import { RegisterUserDto } from "../auth/dto/auth.dto";
+import { ChangeUserImage } from "./dto/user.dto";
+import { ImageService } from "../image/image.service";
 
 @Injectable()
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
         email,
       },
       select: this.userResourceIncludeBuilder(),
-    })
+    });
   }
 
   async findOneById(id: number) {
@@ -29,13 +29,13 @@ export class UserService {
         id,
       },
       select: this.userShortResourceIncludeBuilder(),
-    })
+    });
   }
 
   async find() {
     return await this.prismaService.user.findMany({
       select: this.userResourceIncludeBuilder(),
-    })
+    });
   }
 
   async create(createDto: RegisterUserDto) {
@@ -46,16 +46,16 @@ export class UserService {
         name: createDto.name,
         password: await argon2.hash(createDto.password),
       },
-    })
+    });
   }
 
   async changeUserImage(body: ChangeUserImage) {
-    const user = await this.findOneById(body.userId)
-    const image = await this.imageService.imageById(body.imageId)
+    const user = await this.findOneById(body.userId);
+    const image = await this.imageService.imageById(body.imageId);
 
-    if (!user) throw new NotFoundException(`User not found`)
+    if (!user) throw new NotFoundException(`User not found`);
 
-    if (!image) throw new NotFoundException(`Image not found`)
+    if (!image) throw new NotFoundException(`Image not found`);
 
     return await this.prismaService.user.update({
       where: {
@@ -65,7 +65,7 @@ export class UserService {
         imageId: body.imageId,
       },
       select: this.userShortResourceIncludeBuilder(),
-    })
+    });
   }
 
   userShortResourceIncludeBuilder() {
@@ -75,7 +75,7 @@ export class UserService {
       phone: true,
       name: true,
       image: true,
-    }
+    };
   }
 
   userResourceIncludeBuilder() {
@@ -88,6 +88,6 @@ export class UserService {
       createdAt: true,
       updatedAt: true,
       image: true,
-    }
+    };
   }
 }

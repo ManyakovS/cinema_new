@@ -1,63 +1,63 @@
-import * as pactum from 'pactum'
+import * as pactum from "pactum";
 
-import { Test } from '@nestjs/testing'
-import { INestApplication, ValidationPipe } from '@nestjs/common'
+import { Test } from "@nestjs/testing";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
 
-import { AppModule } from '@/app.module'
-import { PrismaService } from '@/shared/modules/prisma/prisma.service'
-import { AuthService } from '@/modules/auth/auth.service'
-import auth from '@/tests/auth'
+import { AppModule } from "@/app.module";
+import { PrismaService } from "@/shared/modules/prisma/prisma.service";
+import { AuthService } from "@/modules/auth/auth.service";
+import auth from "@/tests/auth";
 
-import { UserService } from '../../user.service'
+import { UserService } from "../../user.service";
 
-describe('User E2E', () => {
-  let app: INestApplication
-  let prismaService: PrismaService
-  let userService: UserService
-  let authService: AuthService
+describe("User E2E", () => {
+  let app: INestApplication;
+  let prismaService: PrismaService;
+  let userService: UserService;
+  let authService: AuthService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile()
+    }).compile();
 
-    app = moduleRef.createNestApplication()
+    app = moduleRef.createNestApplication();
 
-    prismaService = app.get(PrismaService)
-    userService = app.get(UserService)
-    authService = app.get(AuthService)
+    prismaService = app.get(PrismaService);
+    userService = app.get(UserService);
+    authService = app.get(AuthService);
 
-    app.useGlobalPipes(new ValidationPipe())
+    app.useGlobalPipes(new ValidationPipe());
 
-    await app.init()
-    await app.listen(0)
+    await app.init();
+    await app.listen(0);
 
     pactum.request.setBaseUrl(
-      (await app.getUrl()).replace('[::1]', 'localhost'),
-    )
-  })
+      (await app.getUrl()).replace("[::1]", "localhost"),
+    );
+  });
 
   afterAll(async () => {
-    await prismaService.cleanDb()
-    await prismaService.$disconnect()
-    await app.close()
-  })
+    await prismaService.cleanDb();
+    await prismaService.$disconnect();
+    await app.close();
+  });
 
   beforeEach(async () => {
-    await prismaService.cleanDb()
-  })
+    await prismaService.cleanDb();
+  });
 
-  describe('[GET] users', () => {
-    it('Should return unauthenticated', () => {
-      return pactum.spec().get('/users').expectStatus(401)
-    })
+  describe("[GET] users", () => {
+    it("Should return unauthenticated", () => {
+      return pactum.spec().get("/users").expectStatus(401);
+    });
 
-    it('Should return users', async () => {
-      const { user, accessToken } = await auth(userService, authService)
+    it("Should return users", async () => {
+      const { user, accessToken } = await auth(userService, authService);
 
       return pactum
         .spec()
-        .get('/users')
+        .get("/users")
         .withHeaders({
           authorization: `Bearer ${accessToken}`,
         })
@@ -67,7 +67,7 @@ describe('User E2E', () => {
             name: user.name,
             email: user.email,
           },
-        ])
-    })
-  })
-})
+        ]);
+    });
+  });
+});

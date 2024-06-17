@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common'
+import { Controller } from "@nestjs/common";
 
-@Controller('qr-code')
+@Controller("qr-code")
 export class QrCodeController {}

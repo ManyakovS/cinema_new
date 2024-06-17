@@ -1,12 +1,12 @@
-import { basename, extname } from 'path'
-import { existsSync, mkdirSync } from 'fs'
-import { diskStorage } from 'multer'
-import { HttpException, HttpStatus } from '@nestjs/common'
+import { basename, extname } from "path";
+import { existsSync, mkdirSync } from "fs";
+import { diskStorage } from "multer";
+import { HttpException, HttpStatus } from "@nestjs/common";
 
 // Multer configuration
 export const multerConfig = {
-  dest: 'public',
-}
+  dest: "public",
+};
 
 // Multer upload options
 export const multerOptions = {
@@ -18,7 +18,7 @@ export const multerOptions = {
   fileFilter: (req: any, file: any, cb: any) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
       // Allow storage of file
-      cb(null, true)
+      cb(null, true);
     } else {
       // Reject file
       cb(
@@ -27,12 +27,12 @@ export const multerOptions = {
           HttpStatus.BAD_REQUEST,
         ),
         false,
-      )
+      );
     }
   },
   // Storage properties
   storage: diskStorage({
-    destination: 'public',
+    destination: "public",
     filename: (req, file, cb) => {
       cb(
         null,
@@ -40,7 +40,7 @@ export const multerOptions = {
           file.originalname,
           extname(file.originalname),
         )}.${Date.now()}${extname(file.originalname)}`,
-      )
+      );
     },
   }),
-}
+};

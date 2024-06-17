@@ -1,30 +1,30 @@
 type IAvailableFiltersInput = {
-  filter: unknown
-}
+  filter: unknown;
+};
 
 type IAvailableFiltersOutput<T> = {
-  where: T
-}
+  where: T;
+};
 
 type IAvailableFilters<T> = {
   [key: string]: (
     params: IAvailableFiltersInput,
-  ) => Promise<IAvailableFiltersOutput<T>>
-}
+  ) => Promise<IAvailableFiltersOutput<T>>;
+};
 
 export type IDefaultFilters<T> = {
-  [key in keyof T]: () => Promise<IAvailableFiltersOutput<T>>
-}
+  [key in keyof T]: () => Promise<IAvailableFiltersOutput<T>>;
+};
 
 type IApplyFiltersInput<T> = {
-  defaultFilters?: IDefaultFilters<T>
-  availableFilters: IAvailableFilters<T>
-  appliedFiltersInput: T
-}
+  defaultFilters?: IDefaultFilters<T>;
+  availableFilters: IAvailableFilters<T>;
+  appliedFiltersInput: T;
+};
 
 export type IApplyFiltersOutput<T> = {
-  whereBuilder: T
-}
+  whereBuilder: T;
+};
 
 /**
  *
@@ -34,14 +34,14 @@ export type IApplyFiltersOutput<T> = {
 export const applyFilters = async <T>(
   params: IApplyFiltersInput<T>,
 ): Promise<IApplyFiltersOutput<T>> => {
-  const { defaultFilters, availableFilters, appliedFiltersInput } = params
-  const whereBuilder: T = {} as T
+  const { defaultFilters, availableFilters, appliedFiltersInput } = params;
+  const whereBuilder: T = {} as T;
 
   if (defaultFilters) {
     for (const [key] of Object.entries(defaultFilters)) {
-      const { where } = await defaultFilters[key]()
+      const { where } = await defaultFilters[key]();
 
-      Object.assign(whereBuilder, where)
+      Object.assign(whereBuilder, where);
     }
   }
 
@@ -49,12 +49,12 @@ export const applyFilters = async <T>(
     if (availableFilters[key] && value) {
       const { where } = await availableFilters[key]({
         filter: value,
-      })
-      Object.assign(whereBuilder, where)
+      });
+      Object.assign(whereBuilder, where);
     }
   }
 
   return {
     whereBuilder,
-  }
-}
+  };
+};
