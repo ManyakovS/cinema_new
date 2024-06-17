@@ -1,14 +1,14 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { JwtService } from "@nestjs/jwt";
+import { Test, TestingModule } from '@nestjs/testing'
+import { JwtService } from '@nestjs/jwt'
 
-import { UserService } from "@/modules/user/user.service";
-import { PrismaService } from "@/shared/modules/prisma/prisma.service";
+import { UserService } from '@/modules/user/user.service'
+import { PrismaService } from '@/shared/modules/prisma/prisma.service'
 
-import { AuthController } from "../../auth.controller";
-import { AuthService } from "../../auth.service";
+import { AuthController } from '../../auth.controller'
+import { AuthService } from '../../auth.service'
 
-describe("AuthController", () => {
-  let controller: AuthController;
+describe('AuthController', () => {
+  let controller: AuthController
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,16 +19,16 @@ describe("AuthController", () => {
         JwtService,
         PrismaService,
         {
-          provide: "JWT_MODULE_OPTIONS",
+          provide: 'JWT_MODULE_OPTIONS',
           useValue: {},
         },
       ],
-    }).compile();
+    }).compile()
 
-    controller = module.get<AuthController>(AuthController);
-  });
+    controller = module.get<AuthController>(AuthController)
+  })
 
-  it("should be defined", () => {
-    expect(controller).toBeDefined();
-  });
-});
+  it('should be defined', () => {
+    expect(controller).toBeDefined()
+  })
+})
