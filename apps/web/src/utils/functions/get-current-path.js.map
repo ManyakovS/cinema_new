@@ -1,1 +1,0 @@
-{"version":3,"file":"get-current-path.js","sourceRoot":"","sources":["get-current-path.ts"],"names":[],"mappings":"AAAA,MAAM,UAAU,cAAc,CAAC,OAAyB,MAAM;IAC5D,IAAI,IAAI,KAAK,MAAM;QAAE,OAAO,MAAM,CAAC,QAAQ,CAAC,IAAI,CAAC;;QAC5C,OAAO,MAAM,CAAC,QAAQ,CAAC,QAAQ,CAAC;AACvC,CAAC"}
