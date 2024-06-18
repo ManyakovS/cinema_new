@@ -3,9 +3,9 @@
   "display": "Base",
   "compilerOptions": {
     "composite": false,
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
