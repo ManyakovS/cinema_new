@@ -1,27 +1,18 @@
-<script lang="ts" setup>
-  import router from '@/router'
-
-  const handleRedirect = async () => {
-    router.push('/')
-  }
-</script>
 <template>
-  <div class="h-screen grid place-items-center">
-    <div class="max-w-3xl w-full p-6">
-      <div class="aspect-[16/8] flex justify-center">
-        <img class="h-full" />
-      </div>
+  <div class="flex flex-col h-full w-full grod items-center justify-center">
+    <h1 class="text-[150px] font-bold">404</h1>
 
-      <div>
-        <div class="text-6xl font-bold text-white text-center my-10">
-          404 Not Found
-        </div>
-        <div class="text-center">
-          <button class="daisy-btn daisy-btn-primary" @click="handleRedirect">
-            Go Back
-          </button>
-        </div>
-      </div>
-    </div>
+    <p class="text-[30px] text-center font-medium mb-10">Страница не найдена</p>
+    <BaseRouterLink :to="{ name: 'home'}">
+      <BaseButton label="Вернуться на главную"/>
+    </BaseRouterLink>
   </div>
 </template>
+
+<script setup lang="ts">
+
+</script>
+
+<style scoped>
+
+</style>

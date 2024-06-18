@@ -49,7 +49,7 @@
   const selectedDateSession = ref()
 
   const filter = ref({
-    filmId: +$route.params.filmIdentifier,
+    filmId: +$route.params.id,
     status: SessionStatus.AVAILABLE,
   })
 

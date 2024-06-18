@@ -116,6 +116,9 @@ export class FilmService {
       include: this.filmResourceIncludeBuilder(),
     });
 
+    if(film === null)
+      throw new NotFoundException("Фильм не найден")
+
     return removeNesting(film);
   }
 

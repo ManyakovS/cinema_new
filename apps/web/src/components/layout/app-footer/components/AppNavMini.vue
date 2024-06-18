@@ -25,11 +25,11 @@
       to: '/home',
     })
 
-    menu.push({
+    /* menu.push({
       icon: 'mdi-movie-open',
       text: 'Фильмы',
       to: '/films',
-    })
+    }) */
 
     menu.push({
       icon: 'mdi-ticket-confirmation',

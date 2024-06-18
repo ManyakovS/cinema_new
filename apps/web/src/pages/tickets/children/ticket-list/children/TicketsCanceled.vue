@@ -8,7 +8,7 @@
               <BaseButton
                 class="w-full"
                 label="Новый заказ"
-                :to="{ name: 'film', params: { filmIdentifier: film.id } }"
+                :to="{ name: 'film', params: { id: film.id } }"
               />
             </div>
           </template>

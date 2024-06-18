@@ -6,17 +6,17 @@
   import { storeToRefs } from 'pinia'
   import { useFilmStore } from '@/stores/films'
 
+  import { useNotify } from '@/utils/hooks/use-notify'
+
+  
   const { getFilm } = useFilmStore()
   const { film } = storeToRefs(useFilmStore())
-
+  
+  const { notifyError } = useNotify()
   const $route = useRoute()
 
   const fetchData = async () => {
-    try {
-      await getFilm(+$route.params.filmIdentifier)
-    } catch (error) {
-      console.error(error)
-    }
+    await getFilm(+$route.params.id).catch(notifyError)
   }
   fetchData()
 </script>

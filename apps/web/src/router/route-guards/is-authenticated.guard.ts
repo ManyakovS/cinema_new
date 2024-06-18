@@ -8,7 +8,7 @@ export const isAuthicatedGuard = async (to, from, next) => {
     if (token) {
       try {
         await userStore.getCurrentUser();
-        return next("/");
+        return next();
       } catch (error) {
         next();
       }
@@ -16,6 +16,6 @@ export const isAuthicatedGuard = async (to, from, next) => {
       next();
     }
   } else {
-    next("/");
+    next();
   }
 };

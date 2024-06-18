@@ -10,14 +10,8 @@ export const routes: RouteRecordRaw[] = [
     redirect: { name: "films-list" },
     children: [
       {
-        name: "films-list",
-        path: "list",
-        component: () => import("@/pages/films/lists-films/AllFims.vue"),
-        beforeEnter: authGuard,
-      },
-      {
         name: "film",
-        path: "film/:filmIdentifier(\\d+|[a-zA-Z-]+)?",
+        path: "film/:id",
         beforeEnter: authGuard,
         component: () => import("@/pages/films/film/Film.vue"),
         redirect: { name: "film-about" },

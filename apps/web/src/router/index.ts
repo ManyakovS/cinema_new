@@ -19,9 +19,16 @@ export const routes: RouteRecordRaw[] = [
   ...ticketsRoutes,
   ...adminRoutes,
   {
+    name: 'main',
     path: "/",
     redirect: { name: "home" },
     beforeEnter: authGuard,
+  },
+  {
+    name: 'not-found',
+    path: "/404",
+    beforeEnter: authGuard,
+    component: () => import('@/pages/NotFound.vue')
   },
   {
     path: "/:catchAll(.*)",
@@ -32,18 +39,6 @@ export const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (
-    to.name &&
-    !Object.keys(to.params).length &&
-    !!Object.keys(from.params).length
-  ) {
-    next({ name: to.name, params: { ...from.params }, query: to.query });
-  } else {
-    next();
-  }
 });
 
 export default router;

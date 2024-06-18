@@ -4,7 +4,7 @@
 
     <AboutFilmInfoCard name="Test" :film="film" />
 
-    <ButtonBack to="/" class="z-[10000]" />
+    <ButtonBack :to="{ name: 'home' }" class="z-[10000]" />
     <BaseShareButton class="!right-[50px] z-[10000]" />
 
     <div class="d-flex flex-column mt-[280px]">
