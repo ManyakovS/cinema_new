@@ -13,25 +13,7 @@ import {
 export class CreateSessionDto {
   @ApiProperty({
     type: String,
-    example: "2023-01-01",
-  })
-  @IsNotEmpty()
-  @IsDateString()
-  @Type(() => IsDateString)
-  createdAt: string;
-
-  @ApiProperty({
-    type: String,
-    example: "2023-01-01",
-  })
-  @IsNotEmpty()
-  @IsDateString()
-  @Type(() => IsDateString)
-  updatedAt: string;
-
-  @ApiProperty({
-    type: String,
-    example: "2023-01-01",
+    example: new Date().toISOString(),
   })
   @IsNotEmpty()
   @IsDateString()
@@ -40,7 +22,7 @@ export class CreateSessionDto {
 
   @ApiProperty({
     type: String,
-    example: "2023-01-01",
+    example: new Date().toISOString(),
   })
   @IsNotEmpty()
   @IsDateString()

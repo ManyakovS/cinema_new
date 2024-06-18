@@ -107,7 +107,6 @@ export class SessionService {
       },
       data: {
         ...createDto,
-        createdAt: new Date(createDto.createdAt),
         updatedAt: new Date(),
         sessionTimeStart: new Date(createDto.sessionTimeStart),
         sessionTimeEnd: new Date(createDto.sessionTimeEnd),
