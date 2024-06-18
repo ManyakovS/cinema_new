@@ -1,5 +1,5 @@
 <template>
-  <div class="button-back items-center" style="display: inline-flex">
+  <div class="button-back items-center" style="display: inline-flex" v-bind="$attrs">
     <RouterLink class="mr-4 text-white" v-if="to" :to="to">
       <VIcon size="26" :color="color" :icon="'mdi-arrow-left'" />
     </RouterLink>

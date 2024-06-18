@@ -1,7 +1,7 @@
 <template>
-  <h5 class="text-h5 text-center font-semibold mb-2">Мои билеты</h5>
+  <h5 class="text-h5 text-center font-semibold mb-2 mt-8">Мои билеты</h5>
 
-  <BaseSearchButton />
+  <BaseSearchButton class="!top-[52px]"/>
 
   <v-tabs v-model="tab" align-tabs="center" color="primary font-semibold">
     <v-tab v-for="_tab in tabs" :key="_tab.value" :value="_tab.value">

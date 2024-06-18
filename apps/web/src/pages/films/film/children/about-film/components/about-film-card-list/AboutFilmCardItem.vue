@@ -1,12 +1,10 @@
 <template>
-  <div class="d-flex flex-column w-[90px] items-center justify-center">
-    <v-avatar size="50" color="surface-variant">
-      <v-img alt="John" :src="getImagePath(icon)" />
+  <div class="d-flex flex-column w-[90px] items-center justify-start">
+    <v-avatar color="surface-variant">
+      <v-img alt="John" :src="getImagePath(icon)"/>
     </v-avatar>
 
-    <div class="break-word text-center">{{ name }}</div>
-
-    <div class="text-caption text-center">{{ position }}</div>
+    <div class="break-word text-center mt-1">{{ name }}</div>
   </div>
 </template>
 
@@ -22,4 +20,8 @@
   defineProps<Props>()
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.v-avatar {
+  @apply rounded-[24px] h-[100px] w-[75px];
+}
+</style>

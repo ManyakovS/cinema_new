@@ -138,6 +138,7 @@ export class FilmService {
         dateStart: new Date(createDto.dateStart),
         title: createDto.title,
         duration: createDto.duration,
+        description: createDto.description,
       },
     });
 

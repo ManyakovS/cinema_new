@@ -5,7 +5,7 @@
         v-for="actorPostion in actors"
         :key="actorPostion.actor.id"
       >
-        <AboutFilmCardItem
+        <AboutFilmCardItem class="mx-2"
           :name="actorPostion.actor.name"
           :position="actorPostion.position"
           :icon="actorPostion.actor.image.path"
@@ -29,9 +29,9 @@
   .about-film__card-list {
     box-shadow: none !important;
     background-color: transparent;
-    margin: 0 -16px;
+    margin: 0 0 0 -16px;
     width: 100%;
     max-width: calc(100vw);
-    width: 100vw;
+    width: calc(100vw - 16px);
   }
 </style>

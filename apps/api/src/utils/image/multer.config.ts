@@ -1,7 +1,7 @@
 import { basename, extname } from "path";
-import { existsSync, mkdirSync } from "fs";
 import { diskStorage } from "multer";
 import { HttpException, HttpStatus } from "@nestjs/common";
+import cyrillicToTranslit from "cyrillic-to-translit-js";
 
 // Multer configuration
 export const multerConfig = {
@@ -16,7 +16,7 @@ export const multerOptions = {
   },
   // Check the mimetypes to allow for upload
   fileFilter: (req: any, file: any, cb: any) => {
-    if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+    if (file.mimetype.match(/\/(jpg|jpeg|png|gif|webp)$/)) {
       // Allow storage of file
       cb(null, true);
     } else {
@@ -34,12 +34,15 @@ export const multerOptions = {
   storage: diskStorage({
     destination: "public",
     filename: (req, file, cb) => {
+      file.originalname = Buffer.from(file.originalname, "latin1").toString(
+        "utf8",
+      );
+      const originalName = basename(file.originalname,extname(file.originalname),);
+      const transliteratedName = cyrillicToTranslit({preset: 'ru'}).transform(originalName).replace(/\s/g, "_");
+
       cb(
         null,
-        `${basename(
-          file.originalname,
-          extname(file.originalname),
-        )}.${Date.now()}${extname(file.originalname)}`,
+        `${transliteratedName}.${Date.now()}${extname(file.originalname)}`,
       );
     },
   }),

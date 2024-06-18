@@ -2,8 +2,8 @@
   <BaseTooltip location="bottom" text="Скопировано">
     <template v-slot:default="{ activator: { props }, click }">
       <VBtn
-        v-bind="props"
-        class="base-share-button text-white"
+        v-bind="{...props, ...$attrs }"
+        class="base-share-button text-white bg-transparent"
         size="26"
         icon="mdi-share-variant"
         @click="handleShare(click)"

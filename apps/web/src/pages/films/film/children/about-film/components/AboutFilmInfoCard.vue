@@ -22,20 +22,22 @@
     </div>
 
     <div class="flex mt-5 justify-between items-center">
-      <v-avatar size="50" color="surface-variant">
-        <v-img
-          alt="John"
-          :src="getImagePath(film.actors[0].actor.image.path)"
-        />
-      </v-avatar>
-
-      <div class="d-flex flex-column align-start justify-end">
-        <div class="text-h6 break-word text-center">
-          {{ film.actors[0].actor.name }}
-        </div>
-
-        <div class="text-caption text-center">
-          {{ film.actors[0].position }}
+      <div class="flex gap-x-2">
+        <v-avatar size="50" color="surface-variant">
+          <v-img
+            alt="John"
+            :src="getImagePath(film.actors.find((a) => a.position === 'Режиссер')?.actor.image.path)"
+          />
+        </v-avatar>
+  
+        <div class="d-flex flex-column align-start justify-end">
+          <div class="text-base font-bold break-word text-center">
+            {{ film.actors.find((a) => a.position === 'Режиссер')?.actor.name }}
+          </div>
+  
+          <div class="text-caption text-center">
+            Режиссер
+          </div>
         </div>
       </div>
 

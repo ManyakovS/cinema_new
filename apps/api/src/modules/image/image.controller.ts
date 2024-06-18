@@ -39,7 +39,7 @@ export class ImageController {
 
   // Загрузка изображения
   @ApiBearerAuth("AccessToken")
-  @ApiResponse({ status: 200, description: "File uploaded in successfully" })
+  @ApiResponse({ status: 200, description: "File uploaded successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @UseGuards(JwtAuthGuard)
   @Post()

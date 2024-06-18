@@ -1,6 +1,6 @@
 <template>
   <VBtn
-    v-bind="props"
+    v-bind="{...props, ...$attrs }"
     class="base-search-button"
     size="26"
     prepend-icon="mdi-magnify"
