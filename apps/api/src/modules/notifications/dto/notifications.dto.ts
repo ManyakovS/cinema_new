@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export enum NotificationType {
-  TICKET_BOOKED = "ticket_book",
+  TICKET_BOOKED = "ticket_booked",
 }
 
 export class CreateNotification {

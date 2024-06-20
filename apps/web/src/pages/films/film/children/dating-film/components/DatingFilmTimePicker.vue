@@ -12,7 +12,7 @@
             @click="toggle"
           >
             <p class="font-semibold text-base">
-              {{ format(item?.sessionTimeStart, 'hh:mm') }}
+              {{ format(item?.sessionTimeStart, 'HH:mm') }}
             </p>
           </v-btn>
         </keep-alive>

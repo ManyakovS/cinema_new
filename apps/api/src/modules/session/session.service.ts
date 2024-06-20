@@ -10,7 +10,7 @@ import {
   SessionStatusEnum,
 } from "./dto/session.dto";
 import { TicketService } from "../ticket/ticket.service";
-import { CreateTicketDto } from "../ticket/dto/ticket.dto";
+import { CreateTicketDto, TicketStatusEnum } from "../ticket/dto/ticket.dto";
 import { CinemaHallService } from "../cinema-hall/cinema-hall.service";
 import { applyFilters, IDefaultFilters } from "@/utils/filter";
 
@@ -133,7 +133,7 @@ export class SessionService {
             await this.ticketServise.create({
               sessionId: session.id,
               cost: 300,
-              status: "available",
+              status: TicketStatusEnum.AVAILABLE,
               code: place.code,
             });
           })(),

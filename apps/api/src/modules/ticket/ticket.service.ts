@@ -176,7 +176,7 @@ export class TicketService {
                 userId: tickets.userId,
               },
             });
-            if (!userFilm)
+            if (!userFilm) {
               await prisma.userFilm.create({
                 data: {
                   filmId: ticket.session.film.id,
@@ -185,6 +185,7 @@ export class TicketService {
                   status: TicketStatusEnum.RESERVATED,
                 },
               });
+            }
             /* :TODO */
 
             ticket = await prisma.ticket.update({
