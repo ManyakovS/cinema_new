@@ -178,6 +178,7 @@ export interface GetFilmsParamsDTO {
   title?: string;
   shortTitle?: string;
   dateStart?: string;
+  isActive?: boolean
 }
 
 export interface GetFilmsByUserParamsDTO {

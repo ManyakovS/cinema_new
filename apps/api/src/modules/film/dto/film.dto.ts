@@ -117,6 +117,14 @@ export class GetFilmsParamsDTO {
   @IsOptional()
   @IsDateString()
   dateStart?: string;
+
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+    required: false,
+  })
+  @IsOptional()
+  isActive?: boolean;
 }
 
 export class CreateFilmImageDto {

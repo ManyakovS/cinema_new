@@ -22,6 +22,8 @@
 
   fetch()
   async function fetch() {
-    getFilms()
+    getFilms({
+      isActive: true,
+    })
   }
 </script>

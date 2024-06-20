@@ -34,6 +34,7 @@
 <script setup lang="ts">
   // Core
   import { storeToRefs } from 'pinia'
+  import {format } from 'date-fns'
 
   // Types
   import { SessionShortResource, SessionStatus, Ticket } from '@/@types/schema'
@@ -51,6 +52,7 @@
   const filter = ref({
     filmId: +$route.params.id,
     status: SessionStatus.AVAILABLE,
+    sessionTimeStart: format(new Date(), 'yyyy-MM-dd HH:mm')
   })
 
   const tickets = ref<Ticket[]>([])

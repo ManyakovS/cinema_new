@@ -116,8 +116,7 @@ export class FilmService {
       include: this.filmResourceIncludeBuilder(),
     });
 
-    if(film === null)
-      throw new NotFoundException("Фильм не найден")
+    if (film === null) throw new NotFoundException("Фильм не найден");
 
     return removeNesting(film);
   }
@@ -265,12 +264,27 @@ export class FilmService {
     params: Prisma.FilmWhereInput,
     defaultFilters: IDefaultFilters<Prisma.FilmWhereInput> = {},
   ) {
+    if ("isActive" in params)
+      defaultFilters["isActive"] = async () => {
+        return {
+          where: {
+            sessions: {
+              some: {
+                sessionTimeStart: {
+                  gte: new Date(),
+                },
+              },
+            },
+          },
+        };
+      };
+
     const { whereBuilder } = await filterBuilder<Prisma.FilmWhereInput>(
       omit(params, Object.keys(defaultFilters)),
       defaultFilters,
     );
 
-    const films = await this.prismaService.film.findMany({
+    let films = await this.prismaService.film.findMany({
       where: whereBuilder,
       include: this.filmShortResouceIncludeBuilder(),
     });
