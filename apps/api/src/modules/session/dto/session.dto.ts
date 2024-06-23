@@ -96,6 +96,16 @@ export class GetSessionsParamsDTO {
   @IsDateString()
   @Type(() => IsDateString)
   sessionTimeStart?: string;
+
+  @ApiProperty({
+    type: String,
+    example: "2023-01-01",
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  @Type(() => IsDateString)
+  sessionTimeEnd?: string;
 }
 
 export enum SessionStatusEnum {

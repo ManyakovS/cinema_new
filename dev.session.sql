@@ -1,1 +1,1 @@
-  SELECT id,name FROM "Genre";
+  delete from user WHERE id = 2

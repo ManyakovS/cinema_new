@@ -155,6 +155,18 @@ export class SessionService {
           where: {
             sessionTimeStart: {
               gte: new Date(_filter.setHours(0, 0, 0, 0)),
+            },
+          },
+        };
+      };
+
+    if (params.sessionTimeEnd)
+      defaultFilters["sessionTimeEnd"] = async () => {
+        const _filter = new Date(params.sessionTimeEnd);
+        return {
+          where: {
+            sessionTimeEnd: {
+              gte: new Date(_filter.setHours(0, 0, 0, 0)),
               lte: new Date(_filter.setHours(23, 59, 59, 999)),
             },
           },

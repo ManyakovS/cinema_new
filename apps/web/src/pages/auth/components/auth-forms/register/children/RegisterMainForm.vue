@@ -13,9 +13,9 @@
         </template>
       </BaseInputWithValidation>
       
-      <InputPassword name="userPassword"/>
+      <InputPassword name="userPassword" type="password"/>
 
-      <InputPassword label="Повторите пароль" name="confirmationPassword" />
+      <InputPassword label="Повторите пароль" name="confirmationPassword" type="password"/>
 
       <BaseButton class="w-full" label="Зарегистрироваться" type="submit" />
       <div class="d-inline-flex text-p mt-4 gap-2 justify-center w-full">

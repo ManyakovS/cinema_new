@@ -64,9 +64,12 @@
 
   async function handleSelectSessionDate(_session: SessionShortResource) {
     if (_session) {
+
+
       await getSessionsByDate({
-        ...filter.value,
-        sessionTimeStart: _session.sessionTimeStart,
+        filmId: filter.value.filmId,
+        status: filter.value.status,
+        sessionTimeEnd: _session.sessionTimeStart,
       })
       getSession(sessionsByDate.value?.[0]?.id)
     }
